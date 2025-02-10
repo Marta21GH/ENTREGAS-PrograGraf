@@ -19,13 +19,19 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="libprgr\EventManager.cpp" />
+    <ClCompile Include="libprgr\InputManager.cpp" />
+    <ClCompile Include="libprgr\Object3D.cpp" />
+    <ClCompile Include="libprgr\Render.cpp" />
     <ClCompile Include="MainPRGR_2024.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="libprgr\bufferObject.h" />
     <ClInclude Include="libprgr\common.h" />
-    <ClInclude Include="libprgr\EventManager.h" />
+    <ClInclude Include="libprgr\InputManager.h" />
+    <ClInclude Include="libprgr\Object3D.h" />
+    <ClInclude Include="libprgr\Render.h" />
     <ClInclude Include="libprgr\vectorMath.h" />
+    <ClInclude Include="libprgr\vertex.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

@@ -1,66 +1,173 @@
 #pragma once
+#define M_PI 3.14159265358979323846
 #include <iostream>
 
 namespace libPRGR {
-
+	typedef struct {
+		union {
+			struct { float x, y, z, w; };
+		};
+	} Vector4f;
 
 	typedef struct {
 		union {
-			struct {
-				float x, y, z, w;
-			};
-			struct {
-				float r, g, b, a;
-			};
-			
-			float data[4];
+			float matrix[4][4];
 		};
-		
-	} vector4f;
+	} Matrix4x4f;
 
-	typedef struct {
-		union {
-			float mat2D[4][4];
-			float mat1[16];
-			vector4f rows[4];
-		};
-
-	} matrix4x4f;
-
-	inline float operator* (vector4f v1, vector4f v2) {
-		
-		float res = 0;
-		
-		res = v1.x * v2.x + v1.y * v2.y + v1.z * v2.z + v1.w * v2.w;
-	
-		return res;
+	//Constructor de estructuras Vector4f
+	inline Vector4f make_Vector4f(float x, float y, float z, float w) {
+		return { x, y, z, w };
 	}
 
-	inline vector4f operator* (matrix4x4f m1, vector4f v1) {
+	//Función para normalizar vectores
+	inline Vector4f normalize(Vector4f v) {
 
-		vector4f res = { 0, 0, 0, 0 };
+		float magnitude = std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z); //formula de la magnitud (solo X,Y,Z)
+		if (magnitude == 0) return { 0, 0, 0, v.w };  //Evitar división por 0
+		return {
+				v.x / magnitude,  //X normalizada
+				v.y / magnitude,  //Y normalizada
+				v.z / magnitude,  //Z normalizada
+				v.w              //W no modifica
+		};
 
+	}
 
-		for (int j = 0; j < 4; j++) {
-			res.data[j] = m1.rows[j] * v1;
+	//Multiplicación escalar (Dot product)
+	inline float operator* (Vector4f v1, Vector4f v2) {
+
+		float res = v1.x * v2.x +
+			v1.y * v2.y +
+			v1.z * v2.z +
+			v1.w * v2.w;
+		return res;
+
+	}
+
+	//Multiplicación vectorial (Cross product)
+	inline Vector4f cross_product(Vector4f v1, Vector4f v2) {
+
+		return {
+			v1.y * v2.z - v1.z * v2.y,
+			v1.z * v2.x - v1.x * v2.z,
+			v1.x * v2.y - v1.y * v2.x,
+			0.0f
+		};
+
+	}
+
+	//Suma de vectores
+	inline Vector4f operator+ (Vector4f v1, Vector4f v2) {
+		return { v1.x + v2.x, v1.y + v2.y, v1.z + v2.z, v1.w + v2.w };
+	}
+
+	//Resta de vectores
+	inline Vector4f operator- (Vector4f v1, Vector4f v2) {
+		return { v1.x - v2.x, v1.y - v2.y, v1.z - v2.z, v1.w - v2.w };
+	}
+
+	//matriz idenidad
+	inline Matrix4x4f make_identityf() {
+
+		Matrix4x4f mat = { 0 }; //matriz 4x4 con todos los elementos 0
+
+		for (int i = 0; i < 4; i++) {
+
+			mat.matrix[i][i] = 1.0f; //diagonal principal con numero 1 asignado
+
 		}
+		return mat;
+
+	}
+
+	//matriz de translacion
+	inline Matrix4x4f make_translate(float x, float y, float z) {
+
+		Matrix4x4f mat = make_identityf(); //matriz identidad
+
+		//asignar la translacion en la ultima colmuna
+		mat.matrix[0][3] = x; //mueve el objeto x unidades en el eje X
+		mat.matrix[1][3] = y;
+		mat.matrix[2][3] = z;
+
+		return mat;
+
+	}
+
+	//matriz de escalado
+	inline Matrix4x4f make_scale(float x, float y, float z) {
+
+		Matrix4x4f mat = { 0 };
+
+		//asignar los factores de escalado en la diagonal principal
+		mat.matrix[0][0] = x; //multiplica las coordenadas del eje X por el factor x
+		mat.matrix[1][1] = y;
+		mat.matrix[2][2] = z;
+		mat.matrix[3][3] = 1.0f; //para que la mult de vectores con w=1 funcione
+
+		return mat;
+
+	}
+
+	//matriz de rotacion
+	inline Matrix4x4f make_rotation_xyz(float angleX, float angleY, float angleZ) {
+		float cosX = std::cos(angleX), sinX = std::sin(angleX);
+		float cosY = std::cos(angleY), sinY = std::sin(angleY);
+		float cosZ = std::cos(angleZ), sinZ = std::sin(angleZ);
+
+		Matrix4x4f mat = {
+				.matrix {
+				{(cos(angleZ) * cos(angleY)), (cos(angleZ) * sin(angleY) * sin(angleX) - sin(angleZ) * cos(angleX)), (cos(angleZ) * sin(angleY) * cos(angleX) + sin(angleZ) * sin(angleX)), 0},
+				{(sin(angleZ) * cos(angleY)), (sin(angleZ) * sin(angleY) * sin(angleX) + cos(angleZ) * cos(angleX)), (sin(angleZ) * sin(angleY) * cos(angleX) - cos(angleZ) * sin(angleX)), 0},
+				{(-1 * sin(angleY)),		(cos(angleY) * sin(angleX)),										 (cos(angleY) * cos(angleX)), 									  0},
+				{0, 0, 0, 1}
+				}
+		};
+
+		return mat;
+	}
+
+	//multiplicacion matriz*matriz
+	inline Matrix4x4f operator*(Matrix4x4f m1, Matrix4x4f m2) {
+		//He buscado si había algotitmos para hacer esto de forma iterativa/más sencilla, pero todo lo que he encontrado era de una complejidad enorme,ç
+		//	así que por ahora lo dejaré con cada número hecho uno a uno para no perder el tiempo
+		Matrix4x4f resMat;
+		resMat.matrix[0][0] = m1.matrix[0][0] * m2.matrix[0][0] + m1.matrix[1][0] * m2.matrix[0][1] + m1.matrix[2][0] * m2.matrix[0][2] + m1.matrix[3][0] * m2.matrix[0][3];
+		resMat.matrix[0][1] = m1.matrix[0][1] * m2.matrix[0][0] + m1.matrix[1][1] * m2.matrix[0][1] + m1.matrix[2][1] * m2.matrix[0][2] + m1.matrix[3][1] * m2.matrix[0][3];
+		resMat.matrix[0][2] = m1.matrix[0][2] * m2.matrix[0][0] + m1.matrix[1][2] * m2.matrix[0][1] + m1.matrix[2][2] * m2.matrix[0][2] + m1.matrix[3][2] * m2.matrix[0][3];
+		resMat.matrix[0][3] = m1.matrix[0][3] * m2.matrix[0][0] + m1.matrix[1][3] * m2.matrix[0][1] + m1.matrix[2][3] * m2.matrix[0][2] + m1.matrix[3][3] * m2.matrix[0][3];
+
+		resMat.matrix[1][0] = m1.matrix[0][0] * m2.matrix[1][0] + m1.matrix[1][0] * m2.matrix[1][1] + m1.matrix[2][0] * m2.matrix[1][2] + m1.matrix[3][0] * m2.matrix[1][3];
+		resMat.matrix[1][1] = m1.matrix[0][1] * m2.matrix[1][0] + m1.matrix[1][1] * m2.matrix[1][1] + m1.matrix[2][1] * m2.matrix[1][2] + m1.matrix[3][1] * m2.matrix[1][3];
+		resMat.matrix[1][2] = m1.matrix[0][2] * m2.matrix[1][0] + m1.matrix[1][2] * m2.matrix[1][1] + m1.matrix[2][2] * m2.matrix[1][2] + m1.matrix[3][2] * m2.matrix[1][3];
+		resMat.matrix[1][3] = m1.matrix[0][3] * m2.matrix[1][0] + m1.matrix[1][3] * m2.matrix[1][1] + m1.matrix[2][3] * m2.matrix[1][2] + m1.matrix[3][3] * m2.matrix[1][3];
+
+		resMat.matrix[2][0] = m1.matrix[0][0] * m2.matrix[2][0] + m1.matrix[1][0] * m2.matrix[2][1] + m1.matrix[2][0] * m2.matrix[2][2] + m1.matrix[3][0] * m2.matrix[2][3];
+		resMat.matrix[2][1] = m1.matrix[0][1] * m2.matrix[2][0] + m1.matrix[1][1] * m2.matrix[2][1] + m1.matrix[2][1] * m2.matrix[2][2] + m1.matrix[3][1] * m2.matrix[2][3];
+		resMat.matrix[2][2] = m1.matrix[0][2] * m2.matrix[2][0] + m1.matrix[1][2] * m2.matrix[2][1] + m1.matrix[2][2] * m2.matrix[2][2] + m1.matrix[3][2] * m2.matrix[2][3];
+		resMat.matrix[2][3] = m1.matrix[0][3] * m2.matrix[2][0] + m1.matrix[1][3] * m2.matrix[2][1] + m1.matrix[2][3] * m2.matrix[2][2] + m1.matrix[3][3] * m2.matrix[2][3];
+
+		resMat.matrix[3][0] = m1.matrix[0][0] * m2.matrix[3][0] + m1.matrix[1][0] * m2.matrix[3][1] + m1.matrix[2][0] * m2.matrix[3][2] + m1.matrix[3][0] * m2.matrix[3][3];
+		resMat.matrix[3][1] = m1.matrix[0][1] * m2.matrix[3][0] + m1.matrix[1][1] * m2.matrix[3][1] + m1.matrix[2][1] * m2.matrix[3][2] + m1.matrix[3][1] * m2.matrix[3][3];
+		resMat.matrix[3][2] = m1.matrix[0][2] * m2.matrix[3][0] + m1.matrix[1][2] * m2.matrix[3][1] + m1.matrix[2][2] * m2.matrix[3][2] + m1.matrix[3][2] * m2.matrix[3][3];
+		resMat.matrix[3][3] = m1.matrix[0][3] * m2.matrix[3][0] + m1.matrix[1][3] * m2.matrix[3][1] + m1.matrix[2][3] * m2.matrix[3][2] + m1.matrix[3][3] * m2.matrix[3][3];
+		
+		return resMat;
+	}
+
+	//multiplicacion matriz*vector
+	inline Vector4f operator*(Matrix4x4f m, Vector4f v) {
+
+		Vector4f res;
+
+		//calcular cada componente del result (x,y,z,w) sumando los productos correspondientes de la fila de la matriz con las ccomponentes del vector
+		res.x = m.matrix[0][0] * v.x + m.matrix[0][1] * v.y + m.matrix[0][2] * v.z + m.matrix[0][3] * v.w;
+		res.y = m.matrix[1][0] * v.x + m.matrix[1][1] * v.y + m.matrix[1][2] * v.z + m.matrix[1][3] * v.w;
+		res.z = m.matrix[2][0] * v.x + m.matrix[2][1] * v.y + m.matrix[2][2] * v.z + m.matrix[2][3] * v.w;
+		res.w = m.matrix[3][0] * v.x + m.matrix[3][1] * v.y + m.matrix[3][2] * v.z + m.matrix[3][3] * v.w;
 
 		return res;
+
 	}
-
-	inline float toRadians(float angle) {
-		return angle * 3.1416/(180.0f);
-	}
-
-	inline matrix4x4f makeTranslate(float x, float y, float z) {
-		matrix4x4f m = { .rows = {{1,0,0,x},{0,1,0,y}, {0,0,1,z}, {0,0,0,1}} };
-		return m;
-	}
-
-	inline std::ostream& operator<<(std::ostream& os, vector4f v1) {
-		os << "{" << v1.data[0] << ", " << v1.data[1] << ", " << v1.data[2] << ", " << v1.data[3] << "}\n";
-
-		return os;
-	}
-
-};
+}
