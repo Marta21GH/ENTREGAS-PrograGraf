@@ -33,6 +33,7 @@ public:
 		pulsa la tecla “D” aumentará el ángulo de giro en el eje Y.
 		o Si se pulsa la tecla “A” disminuirá el ángulo de giro en el eje Y
 	*/
+
 	virtual void move(double timeStep) {
 		//GLFWTimer ?????
 		if (InputManager::keyState[GLFW_KEY_A]) {
