@@ -46,8 +46,25 @@ void Render::putObject(Object3D* obj)
 
 void Render::removeObject(Object3D* obj)
 {
-	//Destruir bufferobject
-	//Quitar buffers de GPU
+	//recupera el bufferObjc correspondiente al obj que queremos eliminar
+	bufferObject bo = bufferObjects[obj->id];
+
+	//libera buffer de vertices e indices
+	glDeleteBuffers(1, &bo.idVertexArray);
+	glDeleteBuffers(1, &bo.idIndexArray);
+
+	//libera el vertex array object 
+	glDeleteVertexArrays(1, &bo.idArray);
+
+	//elimina bufferObject del mapa bufferObjects 
+	bufferObjects.erase(obj->id);
+
+	//elimina objeto 3d de la lista de objetos 
+	objectList.erase(std::remove(objectList.begin(), objectList.end(), obj), objectList.end());
+	//remove() --> mueve obj al final de la lista
+	//erase() --> posicion final donde quedo el objeto
+
+	delete obj;
 }
 
 void Render::drawGL()
