@@ -36,11 +36,11 @@ public:
 	virtual void move(double timeStep) {
 		//GLFWTimer ?????
 		if (InputManager::keyState[GLFW_KEY_A]) {
-			this->rotation.x -= 0.001f;
+			this->rotation.y -= 0.001f;
 		}
 
 		if (InputManager::keyState[GLFW_KEY_D]) {
-			this->rotation.x += 0.001f;
+			this->rotation.y += 0.001f;
 		}
 	}
 	
