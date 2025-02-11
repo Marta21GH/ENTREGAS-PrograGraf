@@ -102,7 +102,7 @@ void Render::mainLoop()
 
 		//Actualizar pos/rot/esc figuras
 		for (auto obj : objectList) {
-			obj->move(0.1);
+			obj->move(0.005);
 			obj->updateModelMatrix();
 		}
 
