@@ -34,15 +34,20 @@ public:
 		o Si se pulsa la tecla “A” disminuirá el ángulo de giro en el eje Y
 	*/
 
-	virtual void move(double timeStep) {
-		//GLFWTimer ?????
+	virtual void move(double timeStep) {	
+		//FALTA: Encontrar alguna forma de que la función espere el numero indicado en timestep para ejecutarse de nuevo al acabar
+		//  comprobar si el angulo crece demasiado rapido
+		float angle = this->rotation.y;
+
 		if (InputManager::keyState[GLFW_KEY_A]) {
-			this->rotation.y -= 0.001f;
+			angle -= 0.00001f;
 		}
 
 		if (InputManager::keyState[GLFW_KEY_D]) {
-			this->rotation.y += 0.001f;
+			angle += 0.00001f;
 		}
+
+		this->rotation.y += angle;
 	}
 	
 	/*
