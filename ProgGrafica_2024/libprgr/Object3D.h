@@ -37,11 +37,11 @@ public:
 	virtual void move(double timeStep) {	
 		//FALTA: Encontrar alguna forma de que la función espere el numero indicado en timestep para ejecutarse de nuevo al acabar
 		//  comprobar si el angulo crece demasiado rapido
-		//velocidad angular en rad/s
+		//rotacion triangulo en rad/s
 		float rotationSpeed = 1.0f;
 
 		if (InputManager::keyState[GLFW_KEY_A]) {
-			this->rotation.y -= rotationSpeed * timeStep;
+			this->rotation.y -= rotationSpeed * timeStep; //angulo de rotacion para el frame
 		}
 
 		if (InputManager::keyState[GLFW_KEY_D]) {
