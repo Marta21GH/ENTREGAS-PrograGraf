@@ -1,13 +1,13 @@
-#include "InputManager.h"
+#include "EventManager.h"
 
-void InputManager::init(GLFWwindow* window)
+void EventManager::init(GLFWwindow* window)
 {
-	glfwSetKeyCallback(window, keyboardManager);
+	glfwSetKeyCallback(window, keybEventManager);
 	glfwSetMouseButtonCallback(window, mouseButtonEvent);
 	glfwSetCursorPosCallback(window, mousePosEvent);
 }
 
-void InputManager::keyboardManager(GLFWwindow* window, int key, int scancode, int action, int mods)
+void EventManager::keybEventManager(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
 	switch (action) {
 	case GLFW_PRESS:
@@ -23,13 +23,13 @@ void InputManager::keyboardManager(GLFWwindow* window, int key, int scancode, in
 	}
 }
 
-void InputManager::mousePosEvent(GLFWwindow* window, double xpos, double ypos)
+void EventManager::mousePosEvent(GLFWwindow* window, double xpos, double ypos)
 {
 	mouseState.x = xpos;
 	mouseState.y = ypos;
 }
 
-void InputManager::mouseButtonEvent(GLFWwindow* window, int button, int action, int mods)
+void EventManager::mouseButtonEvent(GLFWwindow* window, int button, int action, int mods)
 {
 	switch (action) {
 	case GLFW_PRESS:

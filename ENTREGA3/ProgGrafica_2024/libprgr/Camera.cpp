@@ -1,5 +1,5 @@
 #include "Camera.h"
-#include "InputManager.h"
+#include "EventManager.h"
 
 Matrix4x4f Camera::computeViewMatrix()
 {
@@ -46,8 +46,8 @@ Matrix4x4f Camera::computeProjectionMatrix()
 
 void Camera::update()
 {
-    if (InputManager::keyState[GLFW_KEY_W]) { this->pos.z += 0.01f; lookAt.z += 0.01; }
-    if (InputManager::keyState[GLFW_KEY_S]) { this->pos.z -= 0.01f; lookAt.z -= 0.01; }
-    if (InputManager::keyState[GLFW_KEY_A]) { this->pos.x += 0.01f; lookAt.x += 0.01; }
-    if (InputManager::keyState[GLFW_KEY_D]) { this->pos.x -= 0.01f; lookAt.x -= 0.01; }
+    if (EventManager::keyState[GLFW_KEY_W]) { this->pos.z += 0.01f; lookAt.z += 0.01; }
+    if (EventManager::keyState[GLFW_KEY_S]) { this->pos.z -= 0.01f; lookAt.z -= 0.01; }
+    if (EventManager::keyState[GLFW_KEY_A]) { this->pos.x += 0.01f; lookAt.x += 0.01; }
+    if (EventManager::keyState[GLFW_KEY_D]) { this->pos.x -= 0.01f; lookAt.x -= 0.01; }
 }

@@ -29,7 +29,7 @@ namespace libPRGR {
 				v.x / magnitude,  //X normalizada
 				v.y / magnitude,  //Y normalizada
 				v.z / magnitude,  //Z normalizada
-				v.w              //W no modifica
+				0	             //W no modifica
 		};
 
 	}
@@ -132,12 +132,12 @@ namespace libPRGR {
 	inline Matrix4x4f operator*(Matrix4x4f m1, Matrix4x4f m2) {
 		Matrix4x4f resMat;
 
-		for (int fila = 0;fila < 4;fila++) {
+		for(int fila=0;fila<4;fila++){ 
 			for (int columna = 0;columna < 4;columna++) {
 				resMat.matrix[fila][columna] = 0;
 				for (int k = 0;k < 4;k++) {
 					resMat.matrix[fila][columna] += m1.matrix[fila][k] * m2.matrix[k][columna];
-				}
+				}	
 			};
 		}
 		return resMat;
@@ -155,6 +155,7 @@ namespace libPRGR {
 		res.w = m.matrix[3][0] * v.x + m.matrix[3][1] * v.y + m.matrix[3][2] * v.z + m.matrix[3][3] * v.w;
 
 		return res;
+
 	}
 
 	inline float toRadians(float angle) {

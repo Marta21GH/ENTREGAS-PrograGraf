@@ -3,5 +3,6 @@
 using namespace libPRGR;
 
 typedef struct {
-	Vector4f pos;
-} Vertex;
+	Vector4f vPos;
+	Vector4f vColor;
+} vertex_t;
