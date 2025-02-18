@@ -1,0 +1,9 @@
+﻿  Render.cpp
+D:\00_ProgramacionWorkspaces\Visual Studio_VSCode\UNI-3-ProgGraf\ENTREGAS-PrograGraf\ProgGrafica_2024\libprgr\Object3D.h(44,38): warning C4244: '-=': conversión de 'double' a 'float'; posible pérdida de datos
+  (compilando archivo de origen "libprgr/Render.cpp")
+  
+D:\00_ProgramacionWorkspaces\Visual Studio_VSCode\UNI-3-ProgGraf\ENTREGAS-PrograGraf\ProgGrafica_2024\libprgr\Object3D.h(48,38): warning C4244: '+=': conversión de 'double' a 'float'; posible pérdida de datos
+  (compilando archivo de origen "libprgr/Render.cpp")
+  
+D:\00_ProgramacionWorkspaces\Visual Studio_VSCode\UNI-3-ProgGraf\ENTREGAS-PrograGraf\ProgGrafica_2024\libprgr\Render.cpp(89,48): warning C4267: 'argumento': conversión de 'size_t' a 'GLsizei'; posible pérdida de datos
+  ProgGrafica_2024.vcxproj -> D:\00_ProgramacionWorkspaces\Visual Studio_VSCode\UNI-3-ProgGraf\ENTREGAS-PrograGraf\x64\Debug\ENTREGA2.exe
