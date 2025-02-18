@@ -39,7 +39,7 @@
     <ProjectGuid>{7a041f2c-de93-458a-8308-8137b2bf8ae2}</ProjectGuid>
     <RootNamespace>ProgGrafica2023</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <ProjectName>ENTREGA2</ProjectName>
+    <ProjectName>ENTREGA3</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
