@@ -19,6 +19,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="libprgr\Camera.cpp" />
     <ClCompile Include="libprgr\InputManager.cpp" />
     <ClCompile Include="libprgr\Object3D.cpp" />
     <ClCompile Include="libprgr\Render.cpp" />
@@ -26,6 +27,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libprgr\bufferObject.h" />
+    <ClInclude Include="libprgr\Camera.h" />
     <ClInclude Include="libprgr\common.h" />
     <ClInclude Include="libprgr\InputManager.h" />
     <ClInclude Include="libprgr\Object3D.h" />
