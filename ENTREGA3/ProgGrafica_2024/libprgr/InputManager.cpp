@@ -20,4 +20,3 @@ void InputManager::keyboardManager(GLFWwindow* window, int key, int scancode, in
 		break;
 	}
 }
-//funciona?
