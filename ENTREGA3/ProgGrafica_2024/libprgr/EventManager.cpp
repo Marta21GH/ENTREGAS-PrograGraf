@@ -3,8 +3,8 @@
 void EventManager::init(GLFWwindow* window)
 {
 	glfwSetKeyCallback(window, keybEventManager);
-	glfwSetMouseButtonCallback(window, mouseButtonEvent);
-	glfwSetCursorPosCallback(window, mousePosEvent);
+	glfwSetMouseButtonCallback(window, mouseButtonManager);
+	glfwSetCursorPosCallback(window, mousePosManager);
 }
 
 void EventManager::keybEventManager(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -23,13 +23,13 @@ void EventManager::keybEventManager(GLFWwindow* window, int key, int scancode, i
 	}
 }
 
-void EventManager::mousePosEvent(GLFWwindow* window, double xpos, double ypos)
+void EventManager::mousePosManager(GLFWwindow* window, double xpos, double ypos)
 {
 	mouseState.x = xpos;
 	mouseState.y = ypos;
 }
 
-void EventManager::mouseButtonEvent(GLFWwindow* window, int button, int action, int mods)
+void EventManager::mouseButtonManager(GLFWwindow* window, int button, int action, int mods)
 {
 	switch (action) {
 	case GLFW_PRESS:
