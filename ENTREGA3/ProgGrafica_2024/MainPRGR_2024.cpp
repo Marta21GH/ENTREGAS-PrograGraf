@@ -16,7 +16,7 @@ int main(int argc, char** argv)
 	r->cam = new Camera({0,0,-3,1}, {0,1,0,0}, {0,0,0,1});
 	GLFWwindow* window = r->initGLFW();
 
-	Object* objf = new Object("data/triangulos.fiis");
+	Object* objf = new Object("data/cubo.fiis");
 	r->setUpObject(objf);
 
 	while (!glfwWindowShouldClose(window)) {
