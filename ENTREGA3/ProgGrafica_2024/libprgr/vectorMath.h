@@ -6,6 +6,7 @@ namespace libPRGR {
 	typedef struct {
 		union {
 			struct { float x, y, z, w; };
+			struct { float r, g, b, a; };
 		};
 	} Vector4f;
 
