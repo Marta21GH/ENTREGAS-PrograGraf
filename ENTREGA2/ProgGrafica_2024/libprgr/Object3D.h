@@ -41,11 +41,19 @@ public:
 		float rotationSpeed = 1.0f;
 
 		if (InputManager::keyState[GLFW_KEY_A]) {
-			this->rotation.y -= rotationSpeed * timeStep; //angulo de rotacion para el frame
+			this->rotation.x -= rotationSpeed * timeStep; //angulo de rotacion para el frame
 		}
 
 		if (InputManager::keyState[GLFW_KEY_D]) {
-			this->rotation.y += rotationSpeed * timeStep;
+			this->rotation.x += rotationSpeed * timeStep;
+		}
+
+		if (InputManager::keyState[GLFW_KEY_W]) {
+			this->position.y += 0.1f * timeStep;
+		}
+
+		if (InputManager::keyState[GLFW_KEY_S]) {
+			this->position.y -= 0.1f * timeStep;
 		}
 	}
 	

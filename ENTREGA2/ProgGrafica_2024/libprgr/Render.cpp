@@ -60,7 +60,7 @@ void Render::removeObject(Object3D* obj)
 	bufferObjects.erase(obj->id);
 
 	//elimina objeto 3d de la lista de objetos 
-	objectList.erase(std::remove(objectList.begin(), objectList.end(), obj), objectList.end());
+	objectList.remove(obj);
 	//remove() --> mueve obj al final de la lista
 	//erase() --> posicion final donde quedo el objeto
 

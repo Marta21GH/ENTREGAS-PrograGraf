@@ -13,7 +13,7 @@ public:
 	GLFWwindow* window;
 	
 	// Lista de objetos que se dibujaran en la ventana de openGl
-	std::vector<Object3D*> objectList;
+	std::list<Object3D*> objectList;
 
 	// Lista de identificadores de buffer
 	std::map<int, bufferObject> bufferObjects;
