@@ -14,9 +14,10 @@ public:
 	float zNear = 0.01f; //Plano cercano
 	float zFar = 100.0f; //Plano lejano
 
-	Camera(Vector4f pos, Vector4f up, Vector4f lookAt) : pos(pos), up(up), lookAt(lookAt) {}
+	Camera(Vector4f pos, Vector4f rot, Vector4f lookAt, Vector4f up, float fovy, float aspectRatio, float zNear, float zFar)
+		: pos(pos), rot(rot), lookAt(lookAt), up(up), fovy(fovy), aspectRatio(aspectRatio), zNear(zNear), zFar(zFar) {}
 
-	Matrix4x4f computeViewMatrix();
-	Matrix4x4f computeProjectionMatrix();
-	void update();
+	Matrix4x4f lookat();
+	Matrix4x4f projection();
+	void move(double timestep);
 };

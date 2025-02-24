@@ -1,7 +1,7 @@
 #include "Camera.h"
 #include "EventManager.h"
 
-Matrix4x4f Camera::computeViewMatrix()
+Matrix4x4f Camera::lookat()
 {
     Matrix4x4f view = make_identityf();
     Vector4f f = normalize(lookAt - pos);
@@ -30,7 +30,7 @@ Matrix4x4f Camera::computeViewMatrix()
     return view;
 }
 
-Matrix4x4f Camera::computeProjectionMatrix()
+Matrix4x4f Camera::projection()
 {
     Matrix4x4f proj = make_identityf();
     double fovyRad = toRadians(this->fovy);
@@ -44,7 +44,7 @@ Matrix4x4f Camera::computeProjectionMatrix()
     return proj;
 }
 
-void Camera::update()
+void Camera::move(double timestep)
 {
     if (EventManager::keyState[GLFW_KEY_W]) { this->pos.z += 0.01f; lookAt.z += 0.01; }
     if (EventManager::keyState[GLFW_KEY_S]) { this->pos.z -= 0.01f; lookAt.z -= 0.01; }
