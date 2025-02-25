@@ -1,5 +1,10 @@
 #include "Object3D.h"
 #include "EventManager.h"
+
+#include <fstream>
+#include <sstream>
+#include <iostream>
+
 using namespace libPRGR;
 
 Object::Object() {
@@ -11,16 +16,16 @@ Object::Object() {
 	this->indexVertexList = { 0, 1, 2 };
 }
 
-Object::Object(string file) {
+Object::Object(const char* fileName) {
 	id = idCounter++;
 	this->pos = { 0, 0, 0, 1 };
-	loadFromFile(file);
+	loadFromFile(fileName);
 }
 
-void Object::loadFromFile(string file)
+void Object::loadFromFile(const char* fileName)
 {
 	// Abrir fichero
-	std::ifstream f(file);
+	std::ifstream f(fileName);
 	if (f.is_open()) {
 		// leerVertices
 		leerVertices(f);
@@ -30,7 +35,7 @@ void Object::loadFromFile(string file)
 		leerCaras(f);
 	}
 	else {
-		cout << "ERROR: Fichero " << file << " no existe" << endl;
+		cout << "ERROR: Fichero " << fileName << " no existe" << endl;
 	}
 }
 

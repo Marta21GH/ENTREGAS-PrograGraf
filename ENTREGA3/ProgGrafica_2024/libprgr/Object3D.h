@@ -14,18 +14,14 @@ public:
 	vector<unsigned int> indexVertexList;
 
 	Object();
-
-	Object(string file);
+	Object(const char* fileName);
 
 	void update();
-
 	Matrix4x4f computeModelMatrix();
 
-	void loadFromFile(string file);
+	void loadFromFile(const char* fileName);
 
 	void leerVertices(std::ifstream& f);
-
 	void leerColores(std::ifstream& f);
-
 	void leerCaras(std::ifstream& f);
 };
