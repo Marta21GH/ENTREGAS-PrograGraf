@@ -48,7 +48,7 @@ void Render::setUpObject(Object* obj) {
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(vertex_t) * obj->indexVertexList.size(), obj->indexVertexList.data(), GL_STATIC_DRAW);
 
 	//Guardar bufferObject en mapa
-	bufferObjectList[obj->id] = bo;
+	bufferObjectList[obj->ObjectId] = bo;
 }
 
 void Render::drawGL(Object* obj) {
@@ -61,7 +61,7 @@ void Render::drawGL(Object* obj) {
 	Matrix4x4f MVP = projection * view * model;
 
 	//Activar buffers
-	auto bo = bufferObjectList[obj->id];
+	auto bo = bufferObjectList[obj->ObjectId];
 	glBindVertexArray(bo.idArray);
 	glBindBuffer(GL_ARRAY_BUFFER, bo.idVertexArray);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bo.idIndexArray);

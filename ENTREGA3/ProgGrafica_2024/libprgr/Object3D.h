@@ -6,7 +6,8 @@
 class Object {
 public:
 	inline static int idCounter = 0;
-	int id;
+	int ObjectId;
+
 	Vector4f pos = { 0,0,0,1 };
 	Vector4f rot = { 0,0,0,0 };
 	Vector4f size = { 1,1,1,1 };
