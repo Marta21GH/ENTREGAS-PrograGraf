@@ -54,8 +54,8 @@ void Render::setUpObject(Object* obj) {
 void Render::drawGL(Object* obj) {
 	//Seleccionar malla
 	auto model = obj->computeModelMatrix();
-	auto view = cam->computeViewMatrix();
-	auto projection = cam->computeProjectionMatrix();
+	auto view = cam->lookat();
+	auto projection = cam->projection();
 
 	//Matriz modelo vista proyección (MVP)
 	Matrix4x4f MVP = projection * view * model;
