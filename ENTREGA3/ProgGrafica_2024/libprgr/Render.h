@@ -10,7 +10,7 @@ public:
 		unsigned int idIndexArray;	//Identificador de orden de vertices
 	}bufferObject;
 
-	map<int, bufferObject> bufferObjectList;
+	map<int, bufferObject> bufferList;
 	list<Object*> objectList;
 	GLFWwindow* window = nullptr;
 
@@ -21,6 +21,8 @@ public:
 	void initGLFW();
 
 	void deinitGLFW();
+
+	void putObject(Object* obj);
 
 	void setUpObject(Object* obj);
 

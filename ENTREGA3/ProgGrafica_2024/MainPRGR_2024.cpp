@@ -30,7 +30,7 @@ int main(int argc, char** argv)
 	
 	//	Añadirlos al render(putObject, putCamera), y mostrar el escenario por ventana(mainLoop)
 	r->putCamera(cam1);
-	r->setUpObject(cubo);
+	r->putObject(cubo);
 	r->mainLoop();
 
 	r->deinitGLFW();
