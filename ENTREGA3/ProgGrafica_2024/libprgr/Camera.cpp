@@ -46,8 +46,8 @@ Matrix4x4f Camera::projection()
 
 void Camera::move(double timestep)
 {
-    if (EventManager::keyState[GLFW_KEY_W]) { this->pos.z += 0.01f; lookAt.z += 0.01; }
-    if (EventManager::keyState[GLFW_KEY_S]) { this->pos.z -= 0.01f; lookAt.z -= 0.01; }
-    if (EventManager::keyState[GLFW_KEY_A]) { this->pos.x += 0.01f; lookAt.x += 0.01; }
-    if (EventManager::keyState[GLFW_KEY_D]) { this->pos.x -= 0.01f; lookAt.x -= 0.01; }
+    if (EventManager::keyState[GLFW_KEY_UP]) { this->pos.z += 0.005f; lookAt.z += 0.005f; }
+    if (EventManager::keyState[GLFW_KEY_DOWN]) { this->pos.z -= 0.005f; lookAt.z -= 0.005f; }
+    if (EventManager::keyState[GLFW_KEY_LEFT]) { this->pos.x += 0.005f; lookAt.x += 0.005f; }
+    if (EventManager::keyState[GLFW_KEY_RIGHT]) { this->pos.x -= 0.005f; lookAt.x -= 0.005f; }
 }

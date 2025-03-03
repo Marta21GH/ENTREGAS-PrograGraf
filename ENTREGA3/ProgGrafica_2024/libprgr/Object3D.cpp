@@ -9,11 +9,6 @@ using namespace libPRGR;
 
 Object::Object() {
 	ObjectId = idCounter++;
-	this->pos = { 0, 0, 0, 1 };
-	this->vertexList.push_back({ { 0, 0.25, 0, 1 },{ 1,0,0,1 } });
-	this->vertexList.push_back({ { -0.25, -0.25, 0, 1 },{ 1,0,1,1 } });
-	this->vertexList.push_back({ { 0.25, -0.25, 0, 1 },{ 0,0,1,1 } });
-	this->indexVertexList = { 0, 1, 2 };
 }
 
 Object::Object(const char* fileName) {

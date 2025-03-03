@@ -34,6 +34,10 @@
     <ClInclude Include="libprgr\vectorMath.h" />
     <ClInclude Include="libprgr\vertex.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\cubo.fiis" />
+    <None Include="data\cuboCaras.fiis" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

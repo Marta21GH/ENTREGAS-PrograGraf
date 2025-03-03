@@ -18,11 +18,15 @@ public:
 
 	Render();
 
-	GLFWwindow* initGLFW();
+	void initGLFW();
 
 	void deinitGLFW();
 
 	void setUpObject(Object* obj);
 
 	void drawGL(Object* obj);
+
+	void putCamera(Camera* camj);
+
+	void mainLoop();
 };

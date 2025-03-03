@@ -54,4 +54,12 @@
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="data\cubo.fiis">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="data\cuboCaras.fiis">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+  </ItemGroup>
 </Project>

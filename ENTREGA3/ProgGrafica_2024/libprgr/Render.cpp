@@ -5,23 +5,22 @@ Render::Render()
 {
 }
 
-GLFWwindow* Render::initGLFW() {
+void Render::initGLFW() {
 	if (glfwInit() != GLFW_TRUE) {
 		std::cout << "ERROR" << endl;
-		return nullptr;
 	}
 	else {
 		std::cout << "TODO BIEN" << endl;
 	}
 
-	GLFWwindow* window = glfwCreateWindow(1080, 720, "Ventana1", nullptr, nullptr);
+	GLFWwindow* window = glfwCreateWindow(640, 480, "Ventana1", nullptr, nullptr);
 	glfwMakeContextCurrent(window);
 	gladLoadGL(glfwGetProcAddress);
 
 	EventManager::init(window);
 	glEnable(GL_DEPTH_TEST);
 
-	return window;
+	this->window = window;
 }
 
 void Render::deinitGLFW() {
@@ -80,4 +79,30 @@ void Render::drawGL(Object* obj) {
 	glPopMatrix();
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
+}
+
+void Render::putCamera(Camera* camj)
+{
+	this->cam = camj;
+}
+
+void Render::mainLoop()
+{
+	while (!glfwWindowShouldClose(this->window)) {
+		//Check eventos
+		glfwPollEvents();
+		for (auto obj : this->objectList) {
+			obj->update();
+			this->cam->move(0.1);
+		}
+		//Dibujar
+			//Limpiar buffer
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		//Mandar figura a dibujar
+		for (auto obj : this->objectList) {
+			this->drawGL(obj);
+		}
+		//Cambiar buffers
+		glfwSwapBuffers(this->window);
+	}
 }
