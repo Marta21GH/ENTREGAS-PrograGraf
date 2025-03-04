@@ -50,4 +50,6 @@ void Camera::move(double timestep)
     if (EventManager::keyState[GLFW_KEY_DOWN]) { this->pos.z -= 0.005f; lookAt.z -= 0.005f; }
     if (EventManager::keyState[GLFW_KEY_LEFT]) { this->pos.x += 0.005f; lookAt.x += 0.005f; }
     if (EventManager::keyState[GLFW_KEY_RIGHT]) { this->pos.x -= 0.005f; lookAt.x -= 0.005f; }
+    this->lookAt.x = -1*(EventManager::mouseState.x - 320)/40;
+    this->lookAt.y = -1*(EventManager::mouseState.y - 240)/40;
 }
