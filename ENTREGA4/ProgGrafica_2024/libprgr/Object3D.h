@@ -2,11 +2,13 @@
 #include "common.h"
 #include "vectorMath.h"
 #include "vertex.h"
+#include "Program.h"
 
 class Object {
 public:
 	inline static int idCounter = 0;
 	int ObjectId;
+	Program* prg;
 
 	Vector4f pos = { 0,0,0,1 };
 	Vector4f rot = { 0,0,0,0 };
