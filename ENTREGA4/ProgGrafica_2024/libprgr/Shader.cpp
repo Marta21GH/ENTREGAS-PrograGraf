@@ -19,11 +19,39 @@ void Shader::readSource()
 			linea.append(lAux);
 		}
 	} while (linea != "end");
+	f.close();
 	this->source = linea;
 }
 
 void Shader::compileShader()
 {
+	unsigned int tipo = -1;
+	if (this->fileName.ends_with(".vert")) {
+		tipo = GL_VERTEX_SHADER;
+	}
+	else if (this->fileName.ends_with(".frag")) {
+		tipo = GL_FRAGMENT_SHADER;
+	}
+
+	//leer archivos
+	string code;
+	std::ifstream f(this->fileName);
+	if (f.is_open()) {
+		code = std::string(std::istreambuf_iterator<char>(f), {});
+	}
+	else {
+		std::cout << "ERROR: FICHERO NO ENCONTRADO " <<
+			__FILE__ << ":" << __LINE__ << " " << this->fileName << "\n";
+	}
+
+	//compilar
+	const char* shaderCode = code.c_str();
+	int shaderID = glCreateShader(tipo);
+	glShaderSource(shaderID, 1, &shaderCode, nullptr);
+	glCompileShader(shaderID);
+
+	//checkshadererror()
+	checkErrors();
 }
 
 void Shader::checkErrors()

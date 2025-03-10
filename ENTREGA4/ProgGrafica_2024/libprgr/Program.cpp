@@ -8,6 +8,8 @@ Program::Program()
 
 void Program::addShader(std::string fileName)
 {
+	Shader* shadAux = new Shader(fileName);	
+	this->shaderList.push_back(shadAux);
 }
 
 void Program::linkProgram()
