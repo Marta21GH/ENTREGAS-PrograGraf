@@ -71,4 +71,10 @@ void Shader::checkErrors()
 
 void Shader::clean()
 {
+
+	if (idShader != 0) {
+		glDeleteShader(idShader);
+		idShader = 0;
+	}
+
 }

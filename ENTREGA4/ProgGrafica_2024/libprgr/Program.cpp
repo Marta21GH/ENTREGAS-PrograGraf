@@ -14,7 +14,23 @@ void Program::addShader(std::string fileName)
 
 void Program::linkProgram()
 {
+	// Adjuntar shaders al programa antes de linkearlo
+	for (auto& shader : shaderList) {
+		glAttachShader(idProgram, shader->idShader);
+	}
+
+	// Linkear el programa
 	glLinkProgram(idProgram);
+
+	// Verificar errores
+	checkErrors();
+
+	// Una vez linkeado, podemos limpiar los shaders
+	for (auto& shader : shaderList) {
+		shader->clean();  // Liberar datos del shader
+		delete shader;    // Liberar memoria
+	}
+	shaderList.clear();  // Vaciar la lista
 }
 
 void Program::checkErrors()
@@ -32,6 +48,12 @@ void Program::checkErrors()
 
 void Program::clean()
 {
+
+	if (idProgram != 0) {
+		glDeleteProgram(idProgram);
+		idProgram = 0;
+	}
+
 }
 
 void Program::readVarList()
