@@ -8,8 +8,14 @@ Program::Program()
 
 void Program::addShader(std::string fileName)
 {
-	Shader* shadAux = new Shader(fileName);	
-	this->shaderList.push_back(shadAux);
+	Shader* shadAux = new Shader(fileName);
+	if (shadAux->idShader == 0) {
+		std::cerr << "ERROR: No se pudo cargar el shader " << fileName << std::endl;
+		delete shadAux;
+	}
+	else {
+		this->shaderList.push_back(shadAux);
+	}
 }
 
 void Program::linkProgram()

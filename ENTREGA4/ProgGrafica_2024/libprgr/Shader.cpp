@@ -3,6 +3,23 @@ using namespace libPRGR;
 
 Shader::Shader(std::string fileName)
 {
+	this->fileName = fileName;
+
+	// Determinar el tipo de shader basado en la extensión del archivo
+	if (fileName.ends_with(".vert")) {
+		this->type = GL_VERTEX_SHADER;
+	}
+	else if (fileName.ends_with(".frag")) {
+		this->type = GL_FRAGMENT_SHADER;
+	}
+	else {
+		std::cerr << "ERROR: Tipo de shader desconocido en " << fileName << std::endl;
+		return;
+	}
+
+	// Leer código fuente y compilar
+	readSource();
+	compileShader();
 }
 
 void Shader::readSource()
