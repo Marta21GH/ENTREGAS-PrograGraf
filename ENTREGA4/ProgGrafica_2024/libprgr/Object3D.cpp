@@ -9,10 +9,18 @@ using namespace libPRGR;
 
 Object::Object() {
 	ObjectId = idCounter++;
+	this->prg = new Program();
+	prg->addShader("program.vertex");
+	prg->addShader("program.fragment");
+	prg->linkProgram();
 }
 
 Object::Object(const char* fileName) {
 	ObjectId = idCounter++;
+	this->prg = new Program();
+	prg->addShader("program.vertex");
+	prg->addShader("program.fragment");
+	prg->linkProgram();
 	this->pos = { 0, 0, 0, 1 };
 	loadFromFile(fileName);
 }
@@ -132,7 +140,14 @@ void Object::update() {
 Matrix4x4f Object::computeModelMatrix() {
 	Matrix4x4f model = make_identityf();
 	model = make_translate(pos.x, pos.y, pos.z);
-	model = model*make_rotation_xyz(rot.x, rot.y, rot.z);
-	model = model*make_scale(size.x, size.y, size.z);
+	model = model * make_rotation_xyz(rot.x, rot.y, rot.z);
+	model = model * make_scale(size.x, size.y, size.z);
+
+	// Enviar la matriz al shader
+	if (prg) {
+		prg->use();
+		prg->setUniformData(Program::matrix4, &model, "uModelMatrix");
+	}
+
 	return model;
 }
