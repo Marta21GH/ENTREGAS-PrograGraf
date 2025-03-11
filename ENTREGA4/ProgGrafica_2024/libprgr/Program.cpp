@@ -31,6 +31,9 @@ void Program::linkProgram()
 	// Verificar errores
 	checkErrors();
 
+	//lee variables del shader
+	readVarList();
+
 	// Una vez linkeado, podemos limpiar los shaders
 	for (auto& shader : shaderList) {
 		shader->clean();  // Liberar datos del shader
