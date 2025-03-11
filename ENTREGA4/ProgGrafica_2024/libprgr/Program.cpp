@@ -118,10 +118,13 @@ void Program::setUniformData(dataType_e tipo, void* dato, string nombre)
 			glUniformMatrix4fv(varList[nombre], 1, GL_TRUE, (float*)dato);
 			break;
 		case vector4:
+			glUniform4fv(varList[nombre], 1, (float*)dato);
 			break;
 		case floatpoint:
+			glUniform1f(varList[nombre], *(float*)dato);
 			break;
 		case integer:
+			glUniform1i(varList[nombre], *(int*)dato);
 			break;
 		default:
 			cout << "ERROR: TIPO " << tipo << "NO VÁLIDO" << endl;
