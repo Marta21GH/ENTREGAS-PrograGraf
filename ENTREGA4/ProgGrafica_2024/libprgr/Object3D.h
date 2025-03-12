@@ -27,4 +27,5 @@ public:
 	void leerVertices(std::ifstream& f);
 	void leerColores(std::ifstream& f);
 	void leerCaras(std::ifstream& f);
+	void leerProgramas(std::ifstream& f);
 };

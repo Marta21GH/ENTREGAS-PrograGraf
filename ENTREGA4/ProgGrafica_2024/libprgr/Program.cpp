@@ -21,8 +21,9 @@ void Program::addShader(std::string fileName)
 void Program::linkProgram()
 {
 	// Adjuntar shaders al programa antes de linkearlo
+	//por cada archivo
 	for (auto& shader : shaderList) {
-		glAttachShader(idProgram, shader->idShader);
+		glAttachShader(this->idProgram, shader->idShader);
 	}
 
 	// Linkear el programa
@@ -57,12 +58,10 @@ void Program::checkErrors()
 
 void Program::clean()
 {
-
-	if (idProgram != 0) {
+	if (idProgram != -1) {
 		glDeleteProgram(idProgram);
-		idProgram = 0;
+		idProgram = -1;
 	}
-
 }
 
 void Program::readVarList()
@@ -70,7 +69,7 @@ void Program::readVarList()
 	int numAttributes = 0;
 	int numUniforms = 0;
 
-	glGetProgramiv(idProgram, GL_ACTIVE_ATTRIBUTES, &numAttributes);
+	glGetProgramiv(this->idProgram, GL_ACTIVE_ATTRIBUTES, &numAttributes);
 	for (int i = 0; i < numAttributes; i++)
 	{
 		char varName[100];

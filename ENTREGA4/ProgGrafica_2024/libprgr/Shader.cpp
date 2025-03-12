@@ -24,20 +24,13 @@ Shader::Shader(std::string fileName)
 
 void Shader::readSource()
 {
-	string lAux = "";
-	string linea = "";
 	std::ifstream f(this->fileName);
-	// Mientras linea no "end"
-	do {
-		// Leer linea 
-		std::getline(f, lAux);
-		// Ver si es comentario
-		if ((lAux[0] != '/' && lAux[1] != '/') && (lAux != "end")) {
-			linea.append(lAux);
-		}
-	} while (linea != "end");
+	// Al no haber un "end" marcado y dado que se requiere todo el fichero, es más fácil pasar todo el fichero tal como 
+	// está a un stringstream buffer y volcarlo como string en source
+	std::stringstream buffer;
+	buffer << f.rdbuf();
 	f.close();
-	this->source = linea;
+	this->source = buffer.str();
 }
 
 void Shader::compileShader()
@@ -63,9 +56,9 @@ void Shader::compileShader()
 
 	//compilar
 	const char* shaderCode = code.c_str();
-	int shaderID = glCreateShader(tipo);
-	glShaderSource(shaderID, 1, &shaderCode, nullptr);
-	glCompileShader(shaderID);
+	this->idShader = glCreateShader(tipo);
+	glShaderSource(this->idShader, 1, &shaderCode, nullptr);
+	glCompileShader(this->idShader);
 
 	//checkshadererror()
 	checkErrors();
@@ -88,10 +81,8 @@ void Shader::checkErrors()
 
 void Shader::clean()
 {
-
-	if (idShader != 0) {
+	if (idShader != -1) {
 		glDeleteShader(idShader);
-		idShader = 0;
+		idShader = -1;
 	}
-
 }

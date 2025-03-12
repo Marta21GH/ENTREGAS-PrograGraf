@@ -10,17 +10,11 @@ using namespace libPRGR;
 Object::Object() {
 	ObjectId = idCounter++;
 	this->prg = new Program();
-	prg->addShader("program.vertex");
-	prg->addShader("program.fragment");
-	prg->linkProgram();
 }
 
 Object::Object(const char* fileName) {
 	ObjectId = idCounter++;
 	this->prg = new Program();
-	prg->addShader("program.vertex");
-	prg->addShader("program.fragment");
-	prg->linkProgram();
 	this->pos = { 0, 0, 0, 1 };
 	loadFromFile(fileName);
 }
@@ -36,6 +30,8 @@ void Object::loadFromFile(const char* fileName)
 		leerColores(f);
 		// leerCaras
 		leerCaras(f);
+		// leerProgramas
+		leerProgramas(f);
 	}
 	else {
 		cout << "ERROR: Fichero " << fileName << " no existe" << endl;
@@ -117,6 +113,22 @@ void Object::leerCaras(std::ifstream& f)
 	} while (linea != "end");	
 }
 
+void Object::leerProgramas(std::ifstream& f)
+{
+	string linea = "";
+	// Mientras linea no "end"
+	do {
+		// Leer linea 
+		std::getline(f, linea);
+		// Ver si es comentario
+		if ((linea[0] != '/' && linea[1] != '/') && (linea != "end")) {
+
+			this->prg->addShader(linea);
+		}
+	} while (linea != "end");
+	this->prg->linkProgram();
+}
+
 void Object::update() {
 	if (EventManager::keyState[GLFW_KEY_LEFT]) {
 		this->pos.x -= 0.001f;
@@ -142,12 +154,6 @@ Matrix4x4f Object::computeModelMatrix() {
 	model = make_translate(pos.x, pos.y, pos.z);
 	model = model * make_rotation_xyz(rot.x, rot.y, rot.z);
 	model = model * make_scale(size.x, size.y, size.z);
-
-	// Enviar la matriz al shader
-	if (prg) {
-		prg->use();
-		prg->setUniformData(Program::matrix4, &model, "uModelMatrix");
-	}
 
 	return model;
 }

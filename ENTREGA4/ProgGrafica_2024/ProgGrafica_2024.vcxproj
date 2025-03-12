@@ -41,6 +41,9 @@
   <ItemGroup>
     <None Include="data\cubo.fiis" />
     <None Include="data\cuboCaras.fiis" />
+    <None Include="data\shader.frag" />
+    <None Include="data\shader.vert" />
+    <None Include="data\triangulos.fiis" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

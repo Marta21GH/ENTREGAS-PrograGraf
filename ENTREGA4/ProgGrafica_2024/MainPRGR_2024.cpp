@@ -5,9 +5,6 @@
 #include "libprgr/render.h"
 using namespace libPRGR;
 
-class Object;
-class Bullet;
-
 
 
 int main(int argc, char** argv)

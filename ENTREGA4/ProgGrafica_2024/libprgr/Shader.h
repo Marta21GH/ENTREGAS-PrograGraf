@@ -5,10 +5,10 @@
 
 class Shader {
 public: 
-	unsigned int idShader;	// Variable que almacena el identificador de OpenGL para este shader
-	std::string fileName;	// Variable que almacena el nombre del fichero de texto con el código de este shader
-	GLenum type;			// Variable que almacea el tipo de shader que se ha creado: GL_VERTEX_SHADER o GL_FRAGMENT_SHADER
-	std::string source;		// Variable que almacena el código del shader
+	unsigned int idShader = -1;	// Variable que almacena el identificador de OpenGL para este shader
+	std::string fileName;		// Variable que almacena el nombre del fichero de texto con el código de este shader
+	GLenum type;				// Variable que almacea el tipo de shader que se ha creado: GL_VERTEX_SHADER o GL_FRAGMENT_SHADER
+	std::string source;			// Variable que almacena el código del shader
 
 	
 	/*	Constructor de la clase, recibe por parámetros el nombre de fichero, lo cargará y compilará llamando al resto de 

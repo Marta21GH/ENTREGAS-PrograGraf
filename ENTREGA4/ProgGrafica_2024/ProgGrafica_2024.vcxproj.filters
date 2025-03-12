@@ -73,5 +73,14 @@
     <None Include="data\cuboCaras.fiis">
       <Filter>Archivos de recursos</Filter>
     </None>
+    <None Include="data\shader.frag">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="data\shader.vert">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+    <None Include="data\triangulos.fiis">
+      <Filter>Archivos de recursos</Filter>
+    </None>
   </ItemGroup>
 </Project>

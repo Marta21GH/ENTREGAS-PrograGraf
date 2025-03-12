@@ -69,14 +69,24 @@ void Render::drawGL(Object* obj) {
 	glBindBuffer(GL_ARRAY_BUFFER, bo.idVertexArray);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bo.idIndexArray);
 
-	glPushMatrix();
+	/*glPushMatrix();
 	glLoadIdentity();
 	glMultTransposeMatrixf(&MVP.matrix[0][0]);
 
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glVertexPointer(4, GL_FLOAT, sizeof(vertex_t), (void*)offsetof(vertex_t, vPos));
 	glEnableClientState(GL_COLOR_ARRAY);
-	glColorPointer(4, GL_FLOAT, sizeof(vertex_t), (void*)offsetof(vertex_t, vColor));
+	glColorPointer(4, GL_FLOAT, sizeof(vertex_t), (void*)offsetof(vertex_t, vColor));*/
+
+	//activar programa 
+	obj->prg->use();
+
+	//copiar datos matriz mvp
+	obj->prg->setUniformData(Program::matrix4, &MVP.matrix[0][0], "MVP");
+
+	//set atributo
+	obj->prg->setAttributeData("vPos", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vPos));
+	obj->prg->setAttributeData("vColor", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vColor));
 
 	glDrawElements(GL_TRIANGLES, obj->indexVertexList.size(), GL_UNSIGNED_INT, nullptr);
 
