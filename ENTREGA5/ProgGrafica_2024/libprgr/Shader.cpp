@@ -1,0 +1,88 @@
+#include "Shader.h"
+using namespace libPRGR;
+
+Shader::Shader(std::string fileName)
+{
+	this->fileName = fileName;
+
+	// Determinar el tipo de shader basado en la extensión del archivo
+	if (fileName.ends_with(".vert")) {
+		this->type = GL_VERTEX_SHADER;
+	}
+	else if (fileName.ends_with(".frag")) {
+		this->type = GL_FRAGMENT_SHADER;
+	}
+	else {
+		std::cerr << "ERROR: Tipo de shader desconocido en " << fileName << std::endl;
+		return;
+	}
+
+	// Leer código fuente y compilar
+	readSource();
+	compileShader();
+}
+
+void Shader::readSource()
+{
+	std::ifstream f(this->fileName);
+	// Al no haber un "end" marcado y dado que se requiere todo el fichero, es más fácil pasar todo el fichero tal como 
+	// está a un stringstream buffer y volcarlo como string en source
+	std::stringstream buffer;
+	buffer << f.rdbuf();
+	f.close();
+	this->source = buffer.str();
+}
+
+void Shader::compileShader()
+{
+	unsigned int tipo = -1;
+	if (this->fileName.ends_with(".vert")) {
+		tipo = GL_VERTEX_SHADER;
+	}
+	else if (this->fileName.ends_with(".frag")) {
+		tipo = GL_FRAGMENT_SHADER;
+	}
+
+	//leer archivos
+	string code;
+	std::ifstream f(this->fileName);
+	if (f.is_open()) {
+		code = std::string(std::istreambuf_iterator<char>(f), {});
+	}
+	else {
+		std::cout << "ERROR: FICHERO NO ENCONTRADO " <<
+			__FILE__ << ":" << __LINE__ << " " << this->fileName << "\n";
+	}
+
+	//compilar
+	const char* shaderCode = code.c_str();
+	this->idShader = glCreateShader(tipo);
+	glShaderSource(this->idShader, 1, &shaderCode, nullptr);
+	glCompileShader(this->idShader);
+
+	//checkshadererror()
+	checkErrors();
+}
+
+void Shader::checkErrors()
+{
+	GLint retCode;
+	char errorLog[1024];
+	GLint fragment_compiled;
+	glGetShaderiv(idShader, GL_COMPILE_STATUS, &fragment_compiled);
+	if (fragment_compiled != GL_TRUE)
+	{
+		GLsizei log_length = 0;
+		GLchar message[1024];
+		glGetShaderInfoLog(idShader, 1024, &log_length, message);
+		std::cout << "ERROR " << fileName << "\n" << message << "\n\n";
+	}
+}
+
+void Shader::clean()
+{
+	if (idShader != -1) {
+		glDeleteShader(idShader);
+		idShader = -1;
+	}
+}
