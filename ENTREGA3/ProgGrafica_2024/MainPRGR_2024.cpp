@@ -21,8 +21,8 @@ int main(int argc, char** argv)
 	Object* cubo = new Object();
 	cubo->loadFromFile("data/cuboCaras.fiis");
 	//	Rotar el cubo 45º en el eje Z y 45º en el eje X.
-	cubo->rot.z = 45.0;
-	cubo->rot.x = 45.0;
+	cubo->rot.z = 0;
+	cubo->rot.x = 0;
 
 	//	Crear una cámara, posicionarla en la coordenada <0, 0, -3> y que apunte a la coordenada <0, 0, 0>.
 	//		Ángulo de apertura de 90º, planos zNear = 0.01, zFar = 100
