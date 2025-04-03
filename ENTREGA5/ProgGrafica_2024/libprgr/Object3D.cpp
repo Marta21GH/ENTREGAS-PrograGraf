@@ -66,6 +66,62 @@ void Object::leerVertices(std::ifstream& f)
 	} while (linea != "end");	
 }
 
+void Object::leerNormales(std::ifstream& f)
+{
+	string linea = "";
+	// Mientras linea no "end"
+	do {
+		// Leer linea 
+		std::getline(f, linea);
+		// Ver si es comentario
+		if ((linea[0] != '/' && linea[1] != '/') && (linea != "end")) {
+			std::stringstream l(linea);
+			string identificador;
+			string normal;
+			l >> identificador;
+			l >> normal;
+			std::vector<float> n = splitString<float>(normal, ',');
+
+			//Sacar identificador
+			int vertexId = splitString<int>(identificador, ':')[0];
+			this->vertexList[vertexId - 1].vNormal = { n[0], n[1], n[2], n[3] };
+		}
+	} while (linea != "end");
+}
+
+void Object::leerTexturas(std::ifstream& f)
+{
+	string linea = "";
+	// Mientras linea no "end"
+	do {	//1er bucle: lee coords textura
+		// Leer linea 
+		std::getline(f, linea);
+		// Ver si es comentario
+		if ((linea[0] != '/' && linea[1] != '/') && (linea != "end")) {
+			std::stringstream l(linea);
+			string identificador;
+			string textureCoord;
+			l >> identificador;
+			l >> textureCoord;
+			std::vector<float> tc = splitString<float>(textureCoord, ',');
+
+			//Sacar identificador
+			int vertexId = splitString<int>(identificador, ':')[0];
+			this->vertexList[vertexId - 1].vTextureCoord = { tc[0], tc[1], -1, -1 };
+		}
+	} while (linea != "end");
+
+	do {	//2do bucle: lee fichero textura
+		// Leer linea 
+		std::getline(f, linea);
+		// Ver si es comentario
+		if ((linea[0] != '/' && linea[1] != '/') && (linea != "end")) {
+			// fichero textura en linea
+			this->mat = new Material(linea, 1.0f, 1.0f, 1.0f);
+		}
+	} while (linea != "end");
+}
+
 void Object::leerColores(std::ifstream& f)
 {
 	string linea="";

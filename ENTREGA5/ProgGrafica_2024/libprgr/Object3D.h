@@ -3,6 +3,7 @@
 #include "vectorMath.h"
 #include "vertex.h"
 #include "Program.h"
+#include "Material.h"
 
 class Object {
 public:
@@ -16,6 +17,8 @@ public:
 	vector<vertex_t> vertexList;
 	vector<unsigned int> indexVertexList;
 
+	Material* mat;
+
 	Object();
 	Object(const char* fileName);
 
@@ -25,6 +28,8 @@ public:
 	void loadFromFile(const char* fileName);
 
 	void leerVertices(std::ifstream& f);
+	void leerNormales(std::ifstream& f);
+	void leerTexturas(std::ifstream& f);
 	void leerColores(std::ifstream& f);
 	void leerCaras(std::ifstream& f);
 	void leerProgramas(std::ifstream& f);
