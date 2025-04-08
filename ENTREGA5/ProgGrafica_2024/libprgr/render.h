@@ -1,6 +1,7 @@
 #pragma once
 #include "Object3D.h"
 #include "Camera.h"
+#include "Light.h"
 
 class Render {
 public:
@@ -15,6 +16,7 @@ public:
 	GLFWwindow* window = nullptr;
 
 	Camera* cam = nullptr;
+	Light* light = nullptr;
 
 	Render();
 
@@ -29,6 +31,8 @@ public:
 	void drawGL(Object* obj);
 
 	void putCamera(Camera* camj);
+
+	void putLight(Light* light);
 
 	void mainLoop();
 };

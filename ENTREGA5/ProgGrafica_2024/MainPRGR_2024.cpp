@@ -24,9 +24,11 @@ int main(int argc, char** argv)
 	//	Crear una cámara, posicionarla en la coordenada <0, 0, -3> y que apunte a la coordenada <0, 0, 0>.
 	//		Ángulo de apertura de 90º, planos zNear = 0.01, zFar = 100
 	Camera* cam1 = new Camera({ 0,0,-3,1 }, { 0,0,0,0 }, { 0,0,0,1 }, { 0,1,0,0 }, 90, (640.0f / 480.0f), 0.01f, 100.0f);
-	
+	Light* light1 = new Light({ 0,0,-1,0 }, { 0,0,3,1 }, { 1,1,1,1 }, 1.0f, 1.0f, 1.0f, LightType::POINT);
+
 	//	Añadirlos al render(putObject, putCamera), y mostrar el escenario por ventana(mainLoop)
 	r->putCamera(cam1);
+	r->putLight(light1);
 	r->putObject(cubo);
 	r->mainLoop();
 
