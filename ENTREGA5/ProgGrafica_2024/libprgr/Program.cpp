@@ -1,4 +1,4 @@
-#include "Program.h"
+﻿#include "Program.h"
 
 Program::Program()
 {
@@ -87,7 +87,7 @@ void Program::readVarList()
 		GLenum type = -1;
 		glGetActiveUniform(idProgram, (GLuint)i, bufSize, &length, &size, &type, varName.data());
 		varName = std::string(varName.c_str()); //interrogar con nombre
-		if (varName[varName.length() - 1] == ']') { //si es de tipo array
+		if (!varName.empty() && varName.back() == ']') {
 			std::string arrName = varName.substr(0, varName.find('['));
 			for (int i = 0; i < size; i++) //conseguir la lista completa de nombres
 			{
@@ -109,27 +109,30 @@ void Program::use()
 void Program::setUniformData(dataType_e tipo, void* dato, string nombre)
 {
 	if (varList.find(nombre) == varList.end()) {
-		cout << "ERROR: Variable de shader " << nombre << " no encontrada" << endl;
+		cout << "ERROR: Variable de shader '" << nombre << "' no encontrada" << endl;
+		return;  // ← ⚠️ Esto evita el crash
 	}
-	else {
-		switch (tipo) {
-		case matrix4:
-			glUniformMatrix4fv(varList[nombre], 1, GL_TRUE, (float*)dato);
-			break;
-		case vector4:
-			glUniform4fv(varList[nombre], 1, (float*)dato);
-			break;
-		case floatpoint:
-			glUniform1f(varList[nombre], *(float*)dato);
-			break;
-		case integer:
-			glUniform1i(varList[nombre], *(int*)dato);
-			break;
-		default:
-			cout << "ERROR: TIPO " << tipo << "NO V�LIDO" << endl;
-		}
+
+	cout << "✔ Enviando uniform: " << nombre << endl;
+
+	switch (tipo) {
+	case matrix4:
+		glUniformMatrix4fv(varList[nombre], 1, GL_TRUE, (float*)dato);
+		break;
+	case vector4:
+		glUniform4fv(varList[nombre], 1, (float*)dato);
+		break;
+	case floatpoint:
+		glUniform1f(varList[nombre], *(float*)dato);
+		break;
+	case integer:
+		glUniform1i(varList[nombre], *(int*)dato);
+		break;
+	default:
+		cout << "ERROR: TIPO " << tipo << " NO VÁLIDO" << endl;
 	}
 }
+
 
 void Program::setAttributeData(string nombre, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer)
 {

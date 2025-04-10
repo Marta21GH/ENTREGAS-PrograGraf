@@ -55,44 +55,36 @@ void Render::setUpObject(Object* obj) {
 }
 
 void Render::drawGL(Object* obj) {
-	//Seleccionar malla
+	// Calcular matrices
 	auto model = obj->computeModelMatrix();
 	auto view = cam->lookat();
 	auto projection = cam->projection();
-
-	//Matriz modelo vista proyección (MVP)
 	Matrix4x4f MVP = projection * view * model;
 
-	//Activar buffers
+	// Activar buffers
 	auto bo = bufferList[obj->ObjectId];
 	glBindVertexArray(bo.idArray);
 	glBindBuffer(GL_ARRAY_BUFFER, bo.idVertexArray);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bo.idIndexArray);
 
-	/*glPushMatrix();
-	glLoadIdentity();
-	glMultTransposeMatrixf(&MVP.matrix[0][0]);
-
-	glEnableClientState(GL_VERTEX_ARRAY);
-	glVertexPointer(4, GL_FLOAT, sizeof(vertex_t), (void*)offsetof(vertex_t, vPos));
-	glEnableClientState(GL_COLOR_ARRAY);
-	glColorPointer(4, GL_FLOAT, sizeof(vertex_t), (void*)offsetof(vertex_t, vColor));*/
-
-	//activar programa 
+	// Activar shader
 	obj->prg->use();
 
-	//copiar datos matriz mvp
+	// Enviar uniforms al shader
 	obj->prg->setUniformData(Program::matrix4, &MVP.matrix[0][0], "MVP");
+	obj->prg->setUniformData(Program::matrix4, &model.matrix[0][0], "model");
+	obj->prg->setUniformData(Program::vector4, &this->light->position, "lightPos");
+	obj->prg->setUniformData(Program::vector4, &this->light->color, "lightColor");
+	obj->prg->setUniformData(Program::floatpoint, &this->light->ia, "Ka");
+	obj->prg->setUniformData(Program::floatpoint, &this->light->id, "Kd");
 
-	//set atributo
+	// Enviar atributos por vértice
 	obj->prg->setAttributeData("vPos", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vPos));
 	obj->prg->setAttributeData("vColor", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vColor));
+	obj->prg->setAttributeData("vNormal", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vNormal));
 
+	// Dibujar malla
 	glDrawElements(GL_TRIANGLES, obj->indexVertexList.size(), GL_UNSIGNED_INT, nullptr);
-
-	glPopMatrix();
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);
 }
 
 void Render::putCamera(Camera* camj)

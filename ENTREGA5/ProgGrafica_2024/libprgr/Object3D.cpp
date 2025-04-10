@@ -28,6 +28,7 @@ void Object::loadFromFile(const char* fileName)
 		leerVertices(f);
 		// leerColores
 		leerColores(f);
+		leerNormales(f);
 		// leerCaras
 		leerCaras(f);
 		// leerProgramas
