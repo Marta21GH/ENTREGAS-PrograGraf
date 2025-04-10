@@ -100,6 +100,11 @@ void Render::putCamera(Camera* camj)
 	this->cam = camj;
 }
 
+void Render::putLight(Light* light)
+{
+	this->light = light;
+}
+
 void Render::mainLoop()
 {
 	while (!glfwWindowShouldClose(this->window)) {
