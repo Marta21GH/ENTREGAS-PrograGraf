@@ -33,6 +33,7 @@ void Object::loadFromFile(const char* fileName)
 		leerCaras(f);
 		// leerProgramas
 		leerProgramas(f);
+		leerTexturas(f);
 	}
 	else {
 		cout << "ERROR: Fichero " << fileName << " no existe" << endl;

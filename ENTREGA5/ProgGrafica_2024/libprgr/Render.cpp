@@ -79,9 +79,15 @@ void Render::drawGL(Object* obj) {
 	obj->prg->setUniformData(Program::floatpoint, &this->light->id, "Kd");
 
 	// Enviar atributos por vértice
-	obj->prg->setUniformData(Program::matrix4, &MVP.matrix[0][0], "MVP");
 	obj->prg->setAttributeData("vPos", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vPos));
 	obj->prg->setAttributeData("vColor", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vColor));
+	obj->prg->setAttributeData("vNormal", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vNormal));
+	obj->prg->setAttributeData("vTextureCoord", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vTextureCoord));
+
+	obj->mat->bind(0); // Usa unidad de textura 0
+
+	int unidad = 0;
+	obj->prg->setUniformData(Program::integer, &unidad, "myTexture"); // Asegúrate de que en el shader el sampler se llame igual
 
 	// Dibujar malla
 	glDrawElements(GL_TRIANGLES, obj->indexVertexList.size(), GL_UNSIGNED_INT, nullptr);
