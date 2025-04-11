@@ -70,8 +70,7 @@ void Program::readVarList()
 	int numUniforms = 0;
 
 	glGetProgramiv(this->idProgram, GL_ACTIVE_ATTRIBUTES, &numAttributes);
-	for (int i = 0; i < numAttributes; i++)
-	{
+	for (int i = 0; i < numAttributes; i++) {
 		char varName[100];
 		int bufSize = 100, length = 0, size = 0;
 		GLenum type = -1;
@@ -80,23 +79,26 @@ void Program::readVarList()
 	}
 
 	glGetProgramiv(idProgram, GL_ACTIVE_UNIFORMS, &numUniforms);
-	for (int i = 0; i < numUniforms; i++)
-	{
-		string varName; varName.resize(100);
+	for (int i = 0; i < numUniforms; i++) {
+		char rawName[100] = { 0 };
 		int bufSize = 100, length = 0, size = 0;
 		GLenum type = -1;
-		glGetActiveUniform(idProgram, (GLuint)i, bufSize, &length, &size, &type, varName.data());
-		varName = std::string(varName.c_str()); //interrogar con nombre
-		if (!varName.empty() && varName.back() == ']') {
-			std::string arrName = varName.substr(0, varName.find('['));
-			for (int i = 0; i < size; i++) //conseguir la lista completa de nombres
-			{
-				std::string arrNameIdx = arrName + "[" + std::to_string(i) + "]";
-				varList[arrNameIdx] = glGetUniformLocation(idProgram, arrNameIdx.c_str());
+		glGetActiveUniform(idProgram, (GLuint)i, bufSize, &length, &size, &type, rawName);
+
+		// Solo si el nombre tiene longitud
+		if (length > 0) {
+			std::string varName(rawName);
+
+			if (!varName.empty() && varName.back() == ']') {
+				std::string arrName = varName.substr(0, varName.find('['));
+				for (int j = 0; j < size; j++) {
+					std::string arrNameIdx = arrName + "[" + std::to_string(j) + "]";
+					varList[arrNameIdx] = glGetUniformLocation(idProgram, arrNameIdx.c_str());
+				}
 			}
-		}
-		else {
-			varList[varName] = glGetUniformLocation(idProgram, varName.c_str());
+			else {
+				varList[varName] = glGetUniformLocation(idProgram, varName.c_str());
+			}
 		}
 	}
 }
