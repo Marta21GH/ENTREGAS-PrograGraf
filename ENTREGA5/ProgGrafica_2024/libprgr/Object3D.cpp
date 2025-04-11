@@ -41,52 +41,51 @@ void Object::loadFromFile(const char* fileName)
 
 void Object::leerVertices(std::ifstream& f)
 {
-	string linea="";
-	// Mientras linea no "end"
+	string linea = "";
 	do {
-		// Leer linea 
 		std::getline(f, linea);
-		// Ver si es comentario
-		if ((linea[0] != '/' && linea[1] != '/') && (linea != "end")) {
-			// Separar en partes: identificador y posiciones
-			std::stringstream l(linea);	//Crear stream
-			string identificador;	//Crear dos variables string que contengan partes linea
-			string posiciones;
-			l >> identificador;		//Leer linea y almacenar palabras en variables
-			l >> posiciones;
-			std::vector<float> pos = splitString<float>(posiciones, ',');	//Separar posiciones segun comas ("1,2,3" -> "1" "2" "3")
-			
-			// asignar posiciones a nuevo vertice
-			vertex_t v;
-			v.vPos.x = pos[0];
-			v.vPos.y = pos[1];
-			v.vPos.z = pos[2];
-			v.vPos.w = 1.0f;
-			this->vertexList.push_back(v);
-		}
-	} while (linea != "end");	
+		if (linea.length() < 3 || linea[0] == '/' || linea[1] == '/' || linea == "end") continue;
+
+		std::stringstream l(linea);
+		string identificador;
+		string posiciones;
+		l >> identificador >> posiciones;
+
+		if (posiciones.empty()) continue;
+
+		std::vector<float> pos = splitString<float>(posiciones, ',');
+		if (pos.size() < 3) continue;
+
+		vertex_t v;
+		v.vPos.x = pos[0];
+		v.vPos.y = pos[1];
+		v.vPos.z = pos[2];
+		v.vPos.w = 1.0f;
+		this->vertexList.push_back(v);
+
+	} while (linea != "end");
 }
 
 void Object::leerNormales(std::ifstream& f)
 {
 	string linea = "";
-	// Mientras linea no "end"
 	do {
-		// Leer linea 
 		std::getline(f, linea);
-		// Ver si es comentario
-		if ((linea[0] != '/' && linea[1] != '/') && (linea != "end")) {
-			std::stringstream l(linea);
-			string identificador;
-			string normal;
-			l >> identificador;
-			l >> normal;
-			std::vector<float> n = splitString<float>(normal, ',');
+		if (linea.length() < 3 || linea[0] == '/' || linea[1] == '/' || linea == "end") continue;
 
-			//Sacar identificador
-			int vertexId = splitString<int>(identificador, ':')[0];
-			this->vertexList[vertexId - 1].vNormal = { n[0], n[1], n[2], n[3] };
-		}
+		std::stringstream l(linea);
+		string identificador;
+		string normal;
+		l >> identificador >> normal;
+
+		if (normal.empty()) continue;
+
+		std::vector<float> n = splitString<float>(normal, ',');
+		if (n.size() < 4) continue;
+
+		int vertexId = splitString<int>(identificador, ':')[0];
+		this->vertexList[vertexId - 1].vNormal = { n[0], n[1], n[2], n[3] };
+
 	} while (linea != "end");
 }
 
@@ -125,49 +124,49 @@ void Object::leerTexturas(std::ifstream& f)
 
 void Object::leerColores(std::ifstream& f)
 {
-	string linea="";
-	// Mientras linea no "end"
+	string linea = "";
 	do {
-		// Leer linea 
 		std::getline(f, linea);
-		// Ver si es comentario
-		if ((linea[0] != '/' && linea[1] != '/') && (linea != "end")) {
-			std::stringstream l(linea);
-			string identificador;
-			string colores;
-			l >> identificador;
-			l >> colores;
-			std::vector<float> color = splitString<float>(colores, ',');
+		if (linea.length() < 3 || linea[0] == '/' || linea[1] == '/' || linea == "end") continue;
 
-			//Sacar identificador
-			int vertexId = splitString<int>(identificador, ':')[0];
-			this->vertexList[vertexId - 1].vColor = { color[0], color[1], color[2], color[3] };
-		}
-	} while (linea != "end");	
+		std::stringstream l(linea);
+		string identificador;
+		string colores;
+		l >> identificador >> colores;
+
+		if (colores.empty()) continue;
+
+		std::vector<float> color = splitString<float>(colores, ',');
+		if (color.size() < 4) continue;
+
+		int vertexId = splitString<int>(identificador, ':')[0];
+		this->vertexList[vertexId - 1].vColor = { color[0], color[1], color[2], color[3] };
+
+	} while (linea != "end");
 }
 
 void Object::leerCaras(std::ifstream& f)
 {
-	string linea="";
-	// Mientras linea no "end"
+	string linea = "";
 	do {
-		// Leer linea 
 		std::getline(f, linea);
-		// Ver si es comentario
-		if ((linea[0] != '/' && linea[1] != '/') && (linea != "end")) {
-			std::stringstream l(linea);
-			string identificador;
-			string vertexIds;
-			l >> identificador;
-			l >> vertexIds;
-			std::vector<int> vIds = splitString<int>(vertexIds, ',');
+		if (linea.length() < 3 || linea[0] == '/' || linea[1] == '/' || linea == "end") continue;
 
-			//Sacar identificador
-			this-> indexVertexList.push_back(vIds[0]-1);
-			this-> indexVertexList.push_back(vIds[1]-1);
-			this-> indexVertexList.push_back(vIds[2]-1);
-		}
-	} while (linea != "end");	
+		std::stringstream l(linea);
+		string identificador;
+		string vertexIds;
+		l >> identificador >> vertexIds;
+
+		if (vertexIds.empty()) continue;
+
+		std::vector<int> vIds = splitString<int>(vertexIds, ',');
+		if (vIds.size() < 3) continue;
+
+		this->indexVertexList.push_back(vIds[0] - 1);
+		this->indexVertexList.push_back(vIds[1] - 1);
+		this->indexVertexList.push_back(vIds[2] - 1);
+
+	} while (linea != "end");
 }
 
 void Object::leerProgramas(std::ifstream& f)

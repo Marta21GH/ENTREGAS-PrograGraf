@@ -71,11 +71,13 @@ void Program::readVarList()
 
 	glGetProgramiv(this->idProgram, GL_ACTIVE_ATTRIBUTES, &numAttributes);
 	for (int i = 0; i < numAttributes; i++) {
-		char varName[100];
+		char varName[100] = { 0 };
 		int bufSize = 100, length = 0, size = 0;
 		GLenum type = -1;
 		glGetActiveAttrib(idProgram, (GLuint)i, bufSize, &length, &size, &type, varName);
-		varList[std::string(varName)] = glGetAttribLocation(idProgram, varName);
+		if (length > 0) {
+			varList[std::string(varName)] = glGetAttribLocation(idProgram, varName);
+		}
 	}
 
 	glGetProgramiv(idProgram, GL_ACTIVE_UNIFORMS, &numUniforms);
@@ -85,9 +87,12 @@ void Program::readVarList()
 		GLenum type = -1;
 		glGetActiveUniform(idProgram, (GLuint)i, bufSize, &length, &size, &type, rawName);
 
-		// Solo si el nombre tiene longitud
+		std::cout << "🧪 Uniform #" << i << ", length = " << length << ", name = '" << rawName << "'" << std::endl;
+
 		if (length > 0) {
 			std::string varName(rawName);
+
+			std::cout << "🟢 Nombre leído: '" << varName << "' con longitud: " << varName.length() << std::endl;
 
 			if (!varName.empty() && varName.back() == ']') {
 				std::string arrName = varName.substr(0, varName.find('['));
