@@ -53,7 +53,7 @@ int main(int argc, char** argv)
 	Light* light1 = new Light(
 		{ 0,0,-1,0 },   // dirección
 		{ 0,0,3,1 },    // posición
-		{ 1,1,1,1 },    // color
+		{ 1,0.5,1,1 },    // color
 		1.0f,           // ia
 		1.0f,           // id
 		1.0f,           // is
