@@ -94,5 +94,13 @@
     <None Include="data\triangulos.fiis">
       <Filter>Archivos de recursos</Filter>
     </None>
+    <None Include="data\blenderCube.fiis">
+      <Filter>Archivos de recursos</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\ladosCubo.png">
+      <Filter>Archivos de recursos</Filter>
+    </Image>
   </ItemGroup>
 </Project>

@@ -24,16 +24,22 @@ void Object::loadFromFile(const char* fileName)
 	// Abrir fichero
 	std::ifstream f(fileName);
 	if (f.is_open()) {
-		// leerVertices
+		//// leerVertices
+		//leerVertices(f);
+		//// leerColores
+		//leerColores(f);
+		//leerNormales(f);
+		//// leerCaras
+		//leerCaras(f);
+		//// leerProgramas
+		//leerProgramas(f);
+		//leerTexturas(f);
 		leerVertices(f);
-		// leerColores
 		leerColores(f);
 		leerNormales(f);
-		// leerCaras
-		leerCaras(f);
-		// leerProgramas
-		leerProgramas(f);
 		leerTexturas(f);
+		leerCaras(f);
+		leerProgramas(f);
 	}
 	else {
 		cout << "ERROR: Fichero " << fileName << " no existe" << endl;

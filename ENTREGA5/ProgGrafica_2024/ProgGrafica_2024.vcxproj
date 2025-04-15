@@ -43,11 +43,15 @@
     <ClInclude Include="libprgr\vertex.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="data\blenderCube.fiis" />
     <None Include="data\cubo.fiis" />
     <None Include="data\cuboCaras.fiis" />
     <None Include="data\shader.frag" />
     <None Include="data\shader.vert" />
     <None Include="data\triangulos.fiis" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="data\ladosCubo.png" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>

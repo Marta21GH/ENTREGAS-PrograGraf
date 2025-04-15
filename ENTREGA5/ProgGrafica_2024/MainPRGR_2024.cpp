@@ -28,8 +28,8 @@ int main(int argc, char** argv)
 		return 2;
 	}
 
-	std::cout << "🔄 Cargando modelo desde cuboCaras.fiis...\n";
-	cubo->loadFromFile("data/cuboCaras.fiis");
+	std::cout << "🔄 Cargando modelo desde blenderCube.fiis...\n";
+	cubo->loadFromFile("data/blenderCube.fiis");
 	std::cout << "✅ Modelo cargado\n";
 
 	// Rotaciones iniciales
