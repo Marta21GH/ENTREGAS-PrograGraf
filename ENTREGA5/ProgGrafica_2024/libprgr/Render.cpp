@@ -1,4 +1,4 @@
-#include "render.h"
+ï»¿#include "render.h"
 #include "EventManager.h"
 
 Render::Render()
@@ -55,42 +55,101 @@ void Render::setUpObject(Object* obj) {
 }
 
 void Render::drawGL(Object* obj) {
-	// Calcular matrices
+	//Seleccionar malla
 	auto model = obj->computeModelMatrix();
 	auto view = cam->lookat();
 	auto projection = cam->projection();
+
+	//Matriz modelo vista proyecciÃ³n (MVP)
 	Matrix4x4f MVP = projection * view * model;
 
-	// Activar buffers
+	//Activar buffers
 	auto bo = bufferList[obj->ObjectId];
 	glBindVertexArray(bo.idArray);
 	glBindBuffer(GL_ARRAY_BUFFER, bo.idVertexArray);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bo.idIndexArray);
 
-	// Activar shader
+	//activar programa 
 	obj->prg->use();
 
-	// Enviar uniforms al shader
+	//copiar datos matriz mvp
 	obj->prg->setUniformData(Program::matrix4, &MVP.matrix[0][0], "MVP");
-	obj->prg->setUniformData(Program::matrix4, &model.matrix[0][0], "model");
-	obj->prg->setUniformData(Program::vector4, &this->light->position, "lightPos");
-	obj->prg->setUniformData(Program::vector4, &this->light->color, "lightColor");
-	obj->prg->setUniformData(Program::floatpoint, &this->light->ia, "Ka");
-	obj->prg->setUniformData(Program::floatpoint, &this->light->id, "Kd");
+	obj->prg->setUniformData(Program::matrix4, &model.matrix[0][0], "M");
 
-	// Enviar atributos por vértice
+	//set atributo
 	obj->prg->setAttributeData("vPos", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vPos));
 	obj->prg->setAttributeData("vColor", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vColor));
-	obj->prg->setAttributeData("vNormal", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vNormal));
+	obj->prg->setAttributeData("vNorm", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vNormal));
 	obj->prg->setAttributeData("vTextureCoord", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vTextureCoord));
 
-	obj->mat->bind(0); // Usa unidad de textura 0
 
-	int unidad = 0;
-	obj->prg->setUniformData(Program::integer, &unidad, "myTexture"); // Asegúrate de que en el shader el sampler se llame igual
+	obj->prg->setUniformData(Program::vector4, &(light->position), "lightPos");
+	obj->prg->setUniformData(Program::vector4, &(light->color), "lightColor");
+	obj->prg->setUniformData(Program::floatpoint, &(light->ia), "Ik");
+	obj->prg->setUniformData(Program::floatpoint, &(obj->mat->Ks), "Ks");
+	obj->prg->setUniformData(Program::floatpoint, &(obj->mat->Kd), "Kd");
+	obj->prg->setUniformData(Program::integer, &(obj->mat->Ka), "shinny");
 
-	// Dibujar malla
+	obj->prg->setUniformData(Program::vector4, &(cam->pos), "cameraPos");
+
+	//activar textura
+	int textureUnit = 0;
+	glActiveTexture(GL_TEXTURE0 + textureUnit);	//activar unidad texturado 0
+	glBindTexture(GL_TEXTURE_2D, obj->mat->textureId);	//cargar textura en unidad texturado 0
+	//activar sampler2D en shader
+	obj->prg->setUniformData(Program::integer, &(textureUnit), "textureColor");
+
 	glDrawElements(GL_TRIANGLES, obj->indexVertexList.size(), GL_UNSIGNED_INT, nullptr);
+
+	/*glPopMatrix();
+	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_COLOR_ARRAY);*/
+	//// Calcular matrices
+	//auto model = obj->computeModelMatrix();
+	//auto view = cam->lookat();
+	//auto projection = cam->projection();
+	//Matrix4x4f MVP = projection * view * model;
+
+	//// Activar buffers
+	//auto bo = bufferList[obj->ObjectId];
+	//glBindVertexArray(bo.idArray);
+	//glBindBuffer(GL_ARRAY_BUFFER, bo.idVertexArray);
+	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bo.idIndexArray);
+
+	//// Activar shader
+	//obj->prg->use();
+
+	////Enviar datos matrices
+	//obj->prg->setUniformData(Program::matrix4, &MVP.matrix[0][0], "MVP");
+	//obj->prg->setUniformData(Program::matrix4, &model.matrix[0][0], "M");
+
+	//// Enviar atributos
+	//obj->prg->setAttributeData("vPos", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vPos));
+	////obj->prg->setAttributeData("vColor", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vColor));
+	//obj->prg->setAttributeData("vNorm", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vNormal));
+	//obj->prg->setAttributeData("vTextureCoord", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vTextureCoord));
+
+	//// Enviar uniforms 
+	////Luz:
+	//obj->prg->setUniformData(Program::vector4, &this->light->position, "lightPos");
+	//obj->prg->setUniformData(Program::vector4, &this->light->color, "lightColor");
+	//obj->prg->setUniformData(Program::integer, &(this->light->type), "lightType");
+	//obj->prg->setUniformData(Program::vector4, &(this->light->direction), "lightDirection");
+	//obj->prg->setUniformData(Program::floatpoint, &this->light->ia, "Ik");
+	////Material:
+	//obj->prg->setUniformData(Program::floatpoint, &obj->mat->Kd, "Kd");
+	//obj->prg->setUniformData(Program::floatpoint, &obj->mat->Ks, "Ks");
+	//obj->prg->setUniformData(Program::floatpoint, &obj->mat->Ka, "shinny");
+
+	////obj->prg->setUniformData(Program::vector4, &(this->cam->pos), "cameraPos");
+
+	//obj->mat->bind(0); // Usa unidad de textura 0
+
+	//int unidad = 0;
+	//obj->prg->setUniformData(Program::integer, &unidad, "textureColor"); // Asegï¿½rate de que en el shader el sampler se llame igual
+
+	//// Dibujar malla
+	//glDrawElements(GL_TRIANGLES, obj->indexVertexList.size(), GL_UNSIGNED_INT, nullptr);
 }
 
 void Render::putCamera(Camera* camj)

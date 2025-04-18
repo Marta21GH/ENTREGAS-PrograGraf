@@ -1,23 +1,24 @@
 #version 330 core
 
-in vec4 vPos;
-in vec4 vColor;
-in vec4 vNormal;
-in vec4 vTextureCoord;
+uniform mat4 MVP;	//matriz posiciones globales camara
+uniform mat4 M;		//posiciones absolutas para calculos luz
+attribute vec4 vPos;	//atributos de entrada de vertices
+attribute vec3 vColor;
+attribute vec3 vNorm;	//normal a nivel vértice
+attribute vec2 vTextureCoord;	//coordenadas textura a nivel vertice
 
-uniform mat4 MVP;
-uniform mat4 model;
+out vec4 fColor; //variable de salida para shader de fragmentos
+out vec4 fNorm; //salida datos normales
+out vec4 fPos; //salida datos posicion absoluto (sin camara ni proy)
+out vec4 fTextureCoord; //salida datos coordenadas textura
 
-out vec4 fColor;
-out vec3 fNormal;
-out vec3 fragPos;
-out vec2 texCoord;
-
-void main()
-{
-    gl_Position = MVP * vPos;
-    fColor = vColor;
-    fNormal = mat3(model) * vNormal.xyz; // normal transform
-    fragPos = vec3(model * vPos);        // world position
-    texCoord = vTextureCoord.xy;         // passthrough texture coord
+void main() {
+	//copiar calcular etc. variables de salida
+	fColor = vColor;
+	gl_Position = MVP * vPos;
+	fPos = M * vPos;
+	fNorm = inverse(transpose(M)) * vNorm;
+	fNorm.w=0;
+	fNorm = normalize(fNorm);
+	fTextureCoord = vTextureCoord;
 }
