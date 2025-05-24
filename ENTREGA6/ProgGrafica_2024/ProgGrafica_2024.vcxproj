@@ -28,8 +28,10 @@
     <ClCompile Include="libprgr\Render.cpp" />
     <ClCompile Include="libprgr\Shader.cpp" />
     <ClCompile Include="MainPRGR_2024.cpp" />
+    <ClCompile Include="Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Collider.h" />
     <ClInclude Include="libprgr\Camera.h" />
     <ClInclude Include="libprgr\common.h" />
     <ClInclude Include="libprgr\EventManager.h" />
@@ -41,6 +43,7 @@
     <ClInclude Include="libprgr\Shader.h" />
     <ClInclude Include="libprgr\vectorMath.h" />
     <ClInclude Include="libprgr\vertex.h" />
+    <ClInclude Include="Sphere.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="data\blenderCube.fiis" />

@@ -4,6 +4,7 @@
 #include "vertex.h"
 #include "Program.h"
 #include "Material.h"
+#include "Sphere.h"
 
 class Object {
 public:
@@ -14,10 +15,12 @@ public:
 	Vector4f pos = { 0,0,0,1 };
 	Vector4f rot = { 0,0,0,0 };
 	Vector4f size = { 1,1,1,1 };
-	vector<vertex_t> vertexList;
-	vector<unsigned int> indexVertexList;
+	std::vector<vertex_t> vertexList;
+	std::vector<unsigned int> indexVertexList;
 
 	Material* mat;
+
+	Collider* coll = nullptr;
 
 	Object();
 	Object(const char* fileName);
@@ -33,4 +36,6 @@ public:
 	void leerColores(std::ifstream& f);
 	void leerCaras(std::ifstream& f);
 	void leerProgramas(std::ifstream& f);
+
+	void updateCollider();
 };

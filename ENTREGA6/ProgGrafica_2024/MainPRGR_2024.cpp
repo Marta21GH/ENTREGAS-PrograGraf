@@ -3,6 +3,9 @@
 #define GLAD_BIN
 #include "libprgr/common.h"
 #include "libprgr/render.h"
+#include "libprgr/Object3D.h"
+#include "libprgr/Camera.h"
+
 using namespace libPRGR;
 
 int main(int argc, char** argv)
@@ -27,9 +30,9 @@ int main(int argc, char** argv)
 		std::cerr << "❌ No se pudo crear el objeto 3D\n";
 		return 2;
 	}
-
 	std::cout << "🔄 Cargando modelo desde blenderCube.fiis...\n";
 	cubo->loadFromFile("data/blenderCube.fiis");
+	cubo->updateCollider(); // 🟢 Importante: inicializar colisionador
 	std::cout << "✅ Modelo cargado\n";
 
 	// Rotaciones iniciales
@@ -39,14 +42,15 @@ int main(int argc, char** argv)
 	// Crear cámara
 	Camera* cam1 = new Camera(
 		{ 0,0,-3,1 },   // posición
-		{ 0,0,0,0 },    // centro
-		{ 0,0,0,1 },    // rotación
+		{ 0,0,0,0 },    // rotación
+		{ 0,0,0,1 },    // lookAt
 		{ 0,1,0,0 },    // up
 		90,             // FOV
 		640.0f / 480.0f,
 		0.01f,
 		100.0f
 	);
+	cam1->setCollider(); // 🟢 Crear colisionador de la cámara
 	std::cout << "✅ Cámara creada\n";
 
 	// Crear luz
@@ -69,10 +73,28 @@ int main(int argc, char** argv)
 
 	// Entrar en el bucle principal
 	std::cout << "▶ Iniciando mainLoop()\n";
-	r->mainLoop();
+
+	while (!glfwWindowShouldClose(r->window)) {
+		glfwPollEvents();
+
+		// 🟢 Actualizar colisionador del cubo
+		cubo->updateCollider();
+
+		// 🟢 Mover cámara con detección de colisión
+		cam1->move(0.1, cubo->coll);
+
+		// Limpiar pantalla
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+		// Dibujar objeto
+		r->drawGL(cubo);
+
+		// Intercambiar buffers
+		glfwSwapBuffers(r->window);
+	}
+
 	std::cout << "⏹ mainLoop finalizado\n";
 
-	// Terminar GLFW
 	r->deinitGLFW();
 	std::cout << "✅ GLFW finalizado\n";
 
