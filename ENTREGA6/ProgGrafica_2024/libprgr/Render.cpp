@@ -55,54 +55,45 @@ void Render::setUpObject(Object* obj) {
 }
 
 void Render::drawGL(Object* obj) {
-	//Seleccionar malla
 	auto model = obj->computeModelMatrix();
 	auto view = cam->lookat();
 	auto projection = cam->projection();
-
-	//Matriz modelo vista proyección (MVP)
 	Matrix4x4f MVP = projection * view * model;
 
-	//Activar buffers
 	auto bo = bufferList[obj->ObjectId];
 	glBindVertexArray(bo.idArray);
 	glBindBuffer(GL_ARRAY_BUFFER, bo.idVertexArray);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bo.idIndexArray);
 
-	//activar programa 
 	obj->prg->use();
-
-	//copiar datos matriz mvp
 	obj->prg->setUniformData(Program::matrix4, &MVP.matrix[0][0], "MVP");
 	obj->prg->setUniformData(Program::matrix4, &model.matrix[0][0], "M");
 
-	//set atributo
 	obj->prg->setAttributeData("vPos", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vPos));
-	//obj->prg->setAttributeData("vColor", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vColor));
 	obj->prg->setAttributeData("vNorm", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vNormal));
 	obj->prg->setAttributeData("vTextureCoord", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vTextureCoord));
-
+	// obj->prg->setAttributeData("vColor", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vColor));
 
 	obj->prg->setUniformData(Program::vector4, &(light->position), "lightPos");
 	obj->prg->setUniformData(Program::vector4, &(light->color), "lightColor");
-	//Elegir intensidad según tipo de luz
+
 	switch (light->type) {
 	case LightType::DIRECTIONAL: obj->prg->setUniformData(Program::floatpoint, &(light->id), "Ik"); break;
-	case LightType::POINT: obj->prg->setUniformData(Program::floatpoint, &(light->is), "Ik"); break;
-	default: obj->prg->setUniformData(Program::floatpoint, &(light->ia), "Ik"); break;
+	case LightType::POINT:       obj->prg->setUniformData(Program::floatpoint, &(light->is), "Ik"); break;
+	default:                     obj->prg->setUniformData(Program::floatpoint, &(light->ia), "Ik"); break;
 	}
+
 	obj->prg->setUniformData(Program::floatpoint, &(obj->mat->Ks), "Ks");
 	obj->prg->setUniformData(Program::floatpoint, &(obj->mat->Kd), "Kd");
 	obj->prg->setUniformData(Program::integer, &(obj->mat->Ka), "shinny");
-
 	obj->prg->setUniformData(Program::vector4, &(cam->pos), "cameraPos");
 
-	//activar textura
 	int textureUnit = 0;
-	glActiveTexture(GL_TEXTURE0 + textureUnit);	//activar unidad texturado 0
-	glBindTexture(GL_TEXTURE_2D, obj->mat->textureId);	//cargar textura en unidad texturado 0
-	//activar sampler2D en shader
+	glActiveTexture(GL_TEXTURE0 + textureUnit);
+	glBindTexture(GL_TEXTURE_2D, obj->mat->textureId);
 	obj->prg->setUniformData(Program::integer, &(textureUnit), "textureColor");
+
+	std::cout << "Draw object ID " << obj->ObjectId << " | indices: " << obj->indexVertexList.size() << std::endl;
 
 	glDrawElements(GL_TRIANGLES, obj->indexVertexList.size(), GL_UNSIGNED_INT, nullptr);
 }

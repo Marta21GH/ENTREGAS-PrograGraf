@@ -1,51 +1,40 @@
-#version 330
+#version 330 core
 
 in vec4 fColor;
-in vec4 fNorm; //dato vértices
-in vec4 fPos;
-in vec4 fTextureCoord;
+in vec3 fNorm;
+in vec2 fTexCoord;
+in vec3 fragPos;
+
+out vec4 FragColor;
+
+uniform vec3 lightPos;
+uniform vec3 lightColor;
+uniform vec3 cameraPos;
+
+uniform float Ik;
+uniform float Kd;
+uniform float Ks;
+uniform float shinny;
 
 uniform sampler2D textureColor;
 
-//datos variables código
-//Variables material objeto
-uniform float Kd;
-uniform float Ks;
-uniform int shinny;
-
-//Variables luz
-uniform vec4 lightPos;
-uniform vec4 lightColor;
-uniform float Ik;
-
-//Variables camara
-uniform vec4 cameraPos;
-
 void main() {
-	vec4 textureColor = texture(textureColor, fTextureCoord.xy);
-	float lightIntensity = 1;
-	float ambient = 0.2f;	// CONSTANTE
+    // Normalizado
+    vec3 normal = normalize(fNorm);
+    vec3 lightDir = normalize(lightPos - fragPos);
+    vec3 viewDir = normalize(cameraPos - fragPos);
+    vec3 reflectDir = reflect(-lightDir, normal);
 
-	float diffuse = 0;
-	// IK -> constante intensidad luz
-	// KD -> propiedad difusa material
-	//  L -> Vector direccion luz
-	vec4 L = normalize(lightPos - fPos);
-	//  N -> normal de la superficie
-	vec4 N = normalize(fNorm);
-	diffuse = Ik * Kd * max(dot(L,N),0);
+    // Componentes de iluminación
+    vec3 ambient = Ik * lightColor;
+    float diff = max(dot(normal, lightDir), 0.0);
+    vec3 diffuse = Kd * diff * lightColor;
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), shinny);
+    vec3 specular = Ks * spec * lightColor;
 
+    // Color final combinado
+    vec3 lighting = ambient + diffuse + specular;
+    vec4 texColor = texture(textureColor, fTexCoord);
 
-	float specular = 0;
-	//  R -> Rayo luz reflejado de normal
-	vec4 R = normalize(reflect(L, N));	//(2(N*L)-L)
-	//  V -> Rayo direccion visor/camara
-	vec4 V = normalize(fPos - cameraPos);
-
-	specular = Ik * Ks * pow(max(dot(R, V), 0), shinny);
-
-	lightIntensity = specular + ambient + diffuse;
-
-	if(textureColor.a < 0.1) discard;
-	gl_FragColor = textureColor * lightIntensity * lightColor;
+    FragColor = vec4(lighting * texColor.rgb, texColor.a);
 }

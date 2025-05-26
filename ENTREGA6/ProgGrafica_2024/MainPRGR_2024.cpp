@@ -65,8 +65,8 @@ int main(int argc, char** argv)
 	cubo->loadFromFile("data/blenderCube.fiis");
 	cubo->updateCollider();
 
-	cubo->rot.z = 45.0;
-	cubo->rot.x = 45.0;
+	cubo->rot = { 0, 0, 0, 0 };
+	cubo->pos = { 0, 0, 0, 1 };
 
 	Camera* cam1 = new Camera(
 		{ 0,0,-3,1 },
