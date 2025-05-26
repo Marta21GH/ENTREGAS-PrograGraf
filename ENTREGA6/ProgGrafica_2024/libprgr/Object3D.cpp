@@ -220,3 +220,9 @@ Matrix4x4f Object::computeModelMatrix() {
 
 	return model;
 }
+
+void Object::updateCollider() {
+	if (coll) {
+		coll->update(computeModelMatrix());
+	}
+}

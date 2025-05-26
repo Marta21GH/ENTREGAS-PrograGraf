@@ -27,8 +27,8 @@
     <ClCompile Include="libprgr\Program.cpp" />
     <ClCompile Include="libprgr\Render.cpp" />
     <ClCompile Include="libprgr\Shader.cpp" />
+    <ClCompile Include="libprgr\Sphere.cpp" />
     <ClCompile Include="MainPRGR_2024.cpp" />
-    <ClCompile Include="Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Collider.h" />

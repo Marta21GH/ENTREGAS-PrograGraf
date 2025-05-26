@@ -5,95 +5,110 @@
 #include "libprgr/render.h"
 #include "libprgr/Object3D.h"
 #include "libprgr/Camera.h"
+#include "libprgr/EventManager.h"
 
 using namespace libPRGR;
+
+// 🔴 Definición global del puntero al render
+Render* gRender = nullptr;
+
+// Variable global para activar o desactivar el modo debug
+bool debugDrawCollider = false;
+bool tabKeyPressedLastFrame = false;
+
+void drawCameraCollider(Camera* cam) {
+	if (!cam->coll) return;
+
+	auto* sphere = dynamic_cast<Sphere*>(cam->coll);
+	if (!sphere) return;
+
+	Vector4f c = sphere->center;
+	float s = 0.25f;
+
+	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+	glColor3f(1, 0, 0);
+
+	glPushMatrix();
+	glTranslatef(c.x, c.y, c.z);
+	glScalef(s, s, s);
+
+	glBegin(GL_LINES);
+	glVertex3f(-0.5f, -0.5f, 0.5f); glVertex3f(0.5f, -0.5f, 0.5f);
+	glVertex3f(0.5f, -0.5f, 0.5f); glVertex3f(0.5f, 0.5f, 0.5f);
+	glVertex3f(0.5f, 0.5f, 0.5f); glVertex3f(-0.5f, 0.5f, 0.5f);
+	glVertex3f(-0.5f, 0.5f, 0.5f); glVertex3f(-0.5f, -0.5f, 0.5f);
+	glVertex3f(-0.5f, -0.5f, -0.5f); glVertex3f(0.5f, -0.5f, -0.5f);
+	glVertex3f(0.5f, -0.5f, -0.5f); glVertex3f(0.5f, 0.5f, -0.5f);
+	glVertex3f(0.5f, 0.5f, -0.5f); glVertex3f(-0.5f, 0.5f, -0.5f);
+	glVertex3f(-0.5f, 0.5f, -0.5f); glVertex3f(-0.5f, -0.5f, -0.5f);
+	glVertex3f(-0.5f, -0.5f, -0.5f); glVertex3f(-0.5f, -0.5f, 0.5f);
+	glVertex3f(0.5f, -0.5f, -0.5f); glVertex3f(0.5f, -0.5f, 0.5f);
+	glVertex3f(0.5f, 0.5f, -0.5f); glVertex3f(0.5f, 0.5f, 0.5f);
+	glVertex3f(-0.5f, 0.5f, -0.5f); glVertex3f(-0.5f, 0.5f, 0.5f);
+	glEnd();
+
+	glPopMatrix();
+	glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
 
 int main(int argc, char** argv)
 {
 	std::cout << "🟡 Iniciando programa...\n";
 
-	// Crear render
 	Render* r = new Render();
-	if (!r) {
-		std::cerr << "❌ Error al crear el objeto Render\n";
-		return 1;
-	}
-	std::cout << "✅ Render creado\n";
+	if (!r) return 1;
+	gRender = r;  // 🔴 inicializar puntero global
 
-	// Inicializar GLFW y OpenGL
 	r->initGLFW();
-	std::cout << "✅ initGLFW ejecutado\n";
 
-	// Cargar objeto
 	Object* cubo = new Object();
-	if (!cubo) {
-		std::cerr << "❌ No se pudo crear el objeto 3D\n";
-		return 2;
-	}
-	std::cout << "🔄 Cargando modelo desde blenderCube.fiis...\n";
 	cubo->loadFromFile("data/blenderCube.fiis");
-	cubo->updateCollider(); // 🟢 Importante: inicializar colisionador
-	std::cout << "✅ Modelo cargado\n";
+	cubo->updateCollider();
 
-	// Rotaciones iniciales
 	cubo->rot.z = 45.0;
 	cubo->rot.x = 45.0;
 
-	// Crear cámara
 	Camera* cam1 = new Camera(
-		{ 0,0,-3,1 },   // posición
-		{ 0,0,0,0 },    // rotación
-		{ 0,0,0,1 },    // lookAt
-		{ 0,1,0,0 },    // up
-		90,             // FOV
+		{ 0,0,-3,1 },
+		{ 0,0,0,0 },
+		{ 0,0,0,1 },
+		{ 0,1,0,0 },
+		90,
 		640.0f / 480.0f,
 		0.01f,
 		100.0f
 	);
-	cam1->setCollider(); // 🟢 Crear colisionador de la cámara
-	std::cout << "✅ Cámara creada\n";
+	cam1->setCollider();
 
-	// Crear luz
-	Light* light1 = new Light(
-		{ 0,0,-1,0 },   // dirección
-		{ 0,0,3,1 },    // posición
-		{ 1,1,1,1 },    // color
-		1.0f,           // ia
-		1.0f,           // id
-		1.0f,           // is
-		LightType::POINT
-	);
-	std::cout << "✅ Luz creada\n";
+	Light* light1 = new Light({ 0,0,-1,0 }, { 0,0,3,1 }, { 1,1,1,1 }, 1.0f, 1.0f, 1.0f, LightType::POINT);
 
-	// Agregar elementos al render
 	r->putCamera(cam1);
 	r->putLight(light1);
 	r->putObject(cubo);
-	std::cout << "✅ Elementos añadidos al render\n";
 
-	// Entrar en el bucle principal
 	std::cout << "▶ Iniciando mainLoop()\n";
 
 	while (!glfwWindowShouldClose(r->window)) {
 		glfwPollEvents();
 
-		// 🟢 Actualizar colisionador del cubo
+		// Alternar modo debug con TAB
+		if (EventManager::keyState[GLFW_KEY_TAB] && !tabKeyPressedLastFrame) {
+			debugDrawCollider = !debugDrawCollider;
+			std::cout << "[DEBUG] Visualización collider: " << (debugDrawCollider ? "ON" : "OFF") << std::endl;
+		}
+		tabKeyPressedLastFrame = EventManager::keyState[GLFW_KEY_TAB];
+
 		cubo->updateCollider();
+		cam1->move(0.1);
 
-		// 🟢 Mover cámara con detección de colisión
-		cam1->move(0.1, cubo->coll);
-
-		// Limpiar pantalla
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-		// Dibujar objeto
 		r->drawGL(cubo);
 
-		// Intercambiar buffers
+		if (debugDrawCollider)
+			drawCameraCollider(cam1);
+
 		glfwSwapBuffers(r->window);
 	}
-
-	std::cout << "⏹ mainLoop finalizado\n";
 
 	r->deinitGLFW();
 	std::cout << "✅ GLFW finalizado\n";

@@ -35,4 +35,6 @@ public:
 	void putLight(Light* light);
 
 	void mainLoop();
+
+	static std::vector<Object*> getAllObjects(Render* r);
 };

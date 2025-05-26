@@ -24,7 +24,7 @@ public:
 
 	Matrix4x4f lookat();
 	Matrix4x4f projection();
-	void move(double timestep, Collider* escenarioCollider); // 🟢 Añade colisionador externo
+	void move(double timestep);
 
 	void setCollider(); // 🟢 Inicializa su colisionador
 };

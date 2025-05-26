@@ -182,3 +182,11 @@ void Render::mainLoop()
 		glfwSwapBuffers(this->window);
 	}
 }
+
+std::vector<Object*> Render::getAllObjects(Render* r) {
+	std::vector<Object*> todos;
+	for (auto& obj : r->objectList) {
+		todos.push_back(obj);
+	}
+	return todos;
+}

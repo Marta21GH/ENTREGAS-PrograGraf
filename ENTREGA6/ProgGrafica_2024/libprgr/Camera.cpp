@@ -1,5 +1,6 @@
 ﻿#include "Camera.h"
 #include "EventManager.h"
+#include "render.h"
 
 Matrix4x4f Camera::lookat()
 {
@@ -54,7 +55,7 @@ void Camera::setCollider() {
 	this->coll->update(make_translate(pos.x, pos.y, pos.z));
 }
 
-void Camera::move(double timestep, Collider* escenarioCollider) {
+void Camera::move(double timestep) {
 	Vector4f previousPos = pos;
 	Vector4f previousLook = lookAt;
 
@@ -66,15 +67,17 @@ void Camera::move(double timestep, Collider* escenarioCollider) {
 	this->lookAt.x = -1 * (EventManager::mouseState.x - 320) / 40;
 	this->lookAt.y = -1 * (EventManager::mouseState.y - 240) / 40;
 
-	// 🟢 Actualizar colisionador de la cámara
 	if (this->coll)
 		this->coll->update(make_translate(pos.x, pos.y, pos.z));
 
-	// 🟡 Verificar colisión
-	if (this->coll && escenarioCollider && this->coll->test(escenarioCollider)) {
-		// Restaurar posición anterior
-		this->pos = previousPos;
-		this->lookAt = previousLook;
-		this->coll->update(make_translate(pos.x, pos.y, pos.z));
+	extern Render* gRender;
+	for (auto obj : Render::getAllObjects(gRender)) {
+		if (obj->coll && this->coll && this->coll->test(obj->coll)) {
+			std::cout << "💥 Colisión con objeto ID: " << obj->ObjectId << std::endl;
+			this->pos = previousPos;
+			this->lookAt = previousLook;
+			this->coll->update(make_translate(pos.x, pos.y, pos.z));
+			break;
+		}
 	}
 }
