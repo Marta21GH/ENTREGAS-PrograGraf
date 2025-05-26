@@ -131,6 +131,7 @@ void Render::mainLoop()
 		for (auto obj : this->objectList) {
 			obj->update(timeStep);
 			this->cam->update();
+			this->light->move(timeStep);
 		}
 		//Dibujar
 			//Limpiar buffer

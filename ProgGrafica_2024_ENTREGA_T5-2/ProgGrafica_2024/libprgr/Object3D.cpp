@@ -194,7 +194,7 @@ void Object::update(float timeStep) {
 	}
 
 	float rotationSpeed = 1.0f;
-	this->rot.y += rotationSpeed*timeStep;
+	//this->rot.y += rotationSpeed*timeStep;
 }
 
 Matrix4x4f Object::computeModelMatrix() {

@@ -120,7 +120,7 @@ void Program::setUniformData(dataType_e tipo, void* dato, string nombre)
 		return;  // ← ⚠️ Esto evita el crash
 	}
 
-	cout << "✔ Enviando uniform: " << nombre << endl;
+	//cout << "✔ Enviando uniform: " << nombre << endl;
 
 	switch (tipo) {
 	case matrix4:

@@ -1,11 +1,11 @@
-#version 330 core
+#version 330
 
 uniform mat4 MVP;	//matriz posiciones globales camara
 uniform mat4 M;		//posiciones absolutas para calculos luz
 attribute vec4 vPos;	//atributos de entrada de vertices
-attribute vec3 vColor;
-attribute vec3 vNorm;	//normal a nivel vértice
-attribute vec2 vTextureCoord;	//coordenadas textura a nivel vertice
+attribute vec4 vColor;
+attribute vec4 vNorm;	//normal a nivel vértice
+attribute vec4 vTextureCoord;	//coordenadas textura a nivel vertice
 
 out vec4 fColor; //variable de salida para shader de fragmentos
 out vec4 fNorm; //salida datos normales

@@ -1,9 +1,9 @@
-#version 330 core
+#version 330
 
 in vec4 fColor;
-in vec3 fNorm; //dato vértices
-in vec3 fPos;
-in vec2 fTextureCoord;
+in vec4 fNorm; //dato vértices
+in vec4 fPos;
+in vec4 fTextureCoord;
 
 uniform sampler2D textureColor;
 
@@ -18,11 +18,6 @@ uniform vec4 lightPos;
 uniform vec4 lightColor;
 uniform float Ik;
 
-#define DIRECTIONAL 0
-#define POINT 1
-uniform int lightType;
-uniform vec4 lightDirection;
-
 //Variables camara
 uniform vec4 cameraPos;
 
@@ -35,13 +30,7 @@ void main() {
 	// IK -> constante intensidad luz
 	// KD -> propiedad difusa material
 	//  L -> Vector direccion luz
-		// Si tipo es DIRECTIONAL, L = lightDirection
-		// Si tipo es POINT, L = lightPos - fPos
-	vec4 L = vec4(0,0,0,0);
-	if(lightType == DIRECTIONAL)
-		L = lightDirection;
-	else if(lightType == POINT)
-		L = normalize(lightPos - fPos);
+	vec4 L = normalize(lightPos - fPos);
 	//  N -> normal de la superficie
 	vec4 N = normalize(fNorm);
 	diffuse = Ik * Kd * max(dot(L,N),0);

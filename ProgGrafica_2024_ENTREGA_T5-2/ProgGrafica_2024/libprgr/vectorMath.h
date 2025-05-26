@@ -161,4 +161,10 @@ namespace libPRGR {
 	inline float toRadians(float angle) {
 		return angle * M_PI / (180.0);
 	}
+
+	inline float distance(Vector4f v1, Vector4f v2) {
+		Vector4f direction = v1 - v2;
+		float dist = sqrt((direction.x * direction.x) + (direction.y * direction.y) + (direction.z * direction.z));
+		return dist;
+	}
 }

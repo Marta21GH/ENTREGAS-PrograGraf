@@ -1,5 +1,6 @@
 #include "Light.h"
 
-void move(double timeStep)
+void OrbitalLight::move(double timeStep)
 {
+	
 }

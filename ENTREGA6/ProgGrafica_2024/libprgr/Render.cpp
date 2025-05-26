@@ -78,14 +78,19 @@ void Render::drawGL(Object* obj) {
 
 	//set atributo
 	obj->prg->setAttributeData("vPos", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vPos));
-	obj->prg->setAttributeData("vColor", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vColor));
+	//obj->prg->setAttributeData("vColor", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vColor));
 	obj->prg->setAttributeData("vNorm", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vNormal));
 	obj->prg->setAttributeData("vTextureCoord", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vTextureCoord));
 
 
 	obj->prg->setUniformData(Program::vector4, &(light->position), "lightPos");
 	obj->prg->setUniformData(Program::vector4, &(light->color), "lightColor");
-	obj->prg->setUniformData(Program::floatpoint, &(light->ia), "Ik");
+	//Elegir intensidad según tipo de luz
+	switch (light->type) {
+	case LightType::DIRECTIONAL: obj->prg->setUniformData(Program::floatpoint, &(light->id), "Ik"); break;
+	case LightType::POINT: obj->prg->setUniformData(Program::floatpoint, &(light->is), "Ik"); break;
+	default: obj->prg->setUniformData(Program::floatpoint, &(light->ia), "Ik"); break;
+	}
 	obj->prg->setUniformData(Program::floatpoint, &(obj->mat->Ks), "Ks");
 	obj->prg->setUniformData(Program::floatpoint, &(obj->mat->Kd), "Kd");
 	obj->prg->setUniformData(Program::integer, &(obj->mat->Ka), "shinny");
@@ -100,56 +105,6 @@ void Render::drawGL(Object* obj) {
 	obj->prg->setUniformData(Program::integer, &(textureUnit), "textureColor");
 
 	glDrawElements(GL_TRIANGLES, obj->indexVertexList.size(), GL_UNSIGNED_INT, nullptr);
-
-	/*glPopMatrix();
-	glDisableClientState(GL_VERTEX_ARRAY);
-	glDisableClientState(GL_COLOR_ARRAY);*/
-	//// Calcular matrices
-	//auto model = obj->computeModelMatrix();
-	//auto view = cam->lookat();
-	//auto projection = cam->projection();
-	//Matrix4x4f MVP = projection * view * model;
-
-	//// Activar buffers
-	//auto bo = bufferList[obj->ObjectId];
-	//glBindVertexArray(bo.idArray);
-	//glBindBuffer(GL_ARRAY_BUFFER, bo.idVertexArray);
-	//glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, bo.idIndexArray);
-
-	//// Activar shader
-	//obj->prg->use();
-
-	////Enviar datos matrices
-	//obj->prg->setUniformData(Program::matrix4, &MVP.matrix[0][0], "MVP");
-	//obj->prg->setUniformData(Program::matrix4, &model.matrix[0][0], "M");
-
-	//// Enviar atributos
-	//obj->prg->setAttributeData("vPos", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vPos));
-	////obj->prg->setAttributeData("vColor", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vColor));
-	//obj->prg->setAttributeData("vNorm", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vNormal));
-	//obj->prg->setAttributeData("vTextureCoord", 4, GL_FLOAT, GL_FALSE, sizeof(vertex_t), (void*)offsetof(vertex_t, vTextureCoord));
-
-	//// Enviar uniforms 
-	////Luz:
-	//obj->prg->setUniformData(Program::vector4, &this->light->position, "lightPos");
-	//obj->prg->setUniformData(Program::vector4, &this->light->color, "lightColor");
-	//obj->prg->setUniformData(Program::integer, &(this->light->type), "lightType");
-	//obj->prg->setUniformData(Program::vector4, &(this->light->direction), "lightDirection");
-	//obj->prg->setUniformData(Program::floatpoint, &this->light->ia, "Ik");
-	////Material:
-	//obj->prg->setUniformData(Program::floatpoint, &obj->mat->Kd, "Kd");
-	//obj->prg->setUniformData(Program::floatpoint, &obj->mat->Ks, "Ks");
-	//obj->prg->setUniformData(Program::floatpoint, &obj->mat->Ka, "shinny");
-
-	////obj->prg->setUniformData(Program::vector4, &(this->cam->pos), "cameraPos");
-
-	//obj->mat->bind(0); // Usa unidad de textura 0
-
-	//int unidad = 0;
-	//obj->prg->setUniformData(Program::integer, &unidad, "textureColor"); // Aseg�rate de que en el shader el sampler se llame igual
-
-	//// Dibujar malla
-	//glDrawElements(GL_TRIANGLES, obj->indexVertexList.size(), GL_UNSIGNED_INT, nullptr);
 }
 
 void Render::putCamera(Camera* camj)

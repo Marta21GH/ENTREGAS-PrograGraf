@@ -18,10 +18,21 @@ public:
 	float Id = 1.0f;
 	float Is = 2.0f;
 	LightType type = DIRECTIONAL;
-	Light(Vector4f pos, Vector4f color, /*float I,*/ float Ia, float Id, float Is, LightType type) : 
-		pos(pos), color(color), /*I(I),*/ Ia(Ia), Id(Id), Is(Is), type(type) {};
+	Light(Vector4f pos, Vector4f color, float Ia, float Id, float Is, LightType type) : 
+		pos(pos), color(color), Ia(Ia), Id(Id), Is(Is), type(type) {};
+
+	/*	Método que actualiza la posición de la luz en función de un algoritmo de
+		movimiento (por el momento, vacío)	*/
+	virtual void move(double timeStep) {}
 };
 
-/*	Método que actualiza la posición de la luz en función de un algoritmo de
-	movimiento (por el momento, vacío)	*/
-void move(double timeStep);
+class OrbitalLight : public Light {
+public:
+	Vector4f orbitPoint = { 0,0,0,1 };
+	float orbitRadius = 1.0f;
+
+	OrbitalLight(Vector4f pos, Vector4f color, float Ia, float Id, float Is, LightType type, Vector4f orbitPoint, float orbitRadius) :
+		Light(pos, color, Ia, Id, Is, type), orbitPoint(orbitPoint), orbitRadius(orbitRadius) {};
+
+	void move(double timeStep);
+};

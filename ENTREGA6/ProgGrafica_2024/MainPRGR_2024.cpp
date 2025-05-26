@@ -78,9 +78,10 @@ int main(int argc, char** argv)
 		0.01f,
 		100.0f
 	);
+
 	cam1->setCollider();
 
-	Light* light1 = new Light({ 0,0,-1,0 }, { 0,0,3,1 }, { 1,1,1,1 }, 1.0f, 1.0f, 1.0f, LightType::POINT);
+	Light* light1 = new Light({ 0,0,-1,0 }, { 0,0,-3,1 }, { 1,1,1,1 }, 1.0f, 1.0f, 1.0f, LightType::DIRECTIONAL);
 
 	r->putCamera(cam1);
 	r->putLight(light1);
