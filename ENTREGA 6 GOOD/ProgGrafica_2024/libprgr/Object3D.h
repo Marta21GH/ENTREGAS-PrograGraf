@@ -4,8 +4,8 @@
 #include "vertex.h"
 #include "GLProgram.h"
 #include "Material.h"
-#include "libprgr/Collider.h"
-#include "libprgr/Sphere.h"
+#include "Collider.h"
+#include "Sphere.h"
 
 using namespace libPRGR;
 
