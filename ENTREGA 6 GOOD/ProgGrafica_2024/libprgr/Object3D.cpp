@@ -1,5 +1,7 @@
 #include "Object3D.h"
 #include "EventManager.h"
+#include "Sphere.h"
+
 using namespace libPRGR;
 
 Object::Object() {
@@ -34,6 +36,18 @@ void Object::loadFromFile(string file)
 	else {
 		cout << "ERROR: Fichero " << file << " no existe" << endl;
 	}
+
+	// Crear colisionador tipo esfera con partículas de los vértices
+	Sphere* sphereColl = new Sphere();
+
+	for (auto& v : vertexList) {
+		Collider::particle p;
+		p.min = v.vPos - Vector4f{ 0.005f, 0.005f, 0.005f, 0 };  // Pequeño volumen alrededor del vértice
+		p.max = v.vPos + Vector4f{ 0.005f, 0.005f, 0.005f, 0 };
+		sphereColl->addParticle(p);
+	}
+
+	coll = sphereColl;
 }
 
 void Object::leerVertices(std::ifstream& f)
@@ -203,4 +217,11 @@ Matrix4x4f Object::computeModelMatrix() {
 	model = model*make_rotation_xyz(rot.x, rot.y, rot.z);
 	model = model*make_scale(size.x, size.y, size.z);
 	return model;
+}
+
+void Object::updateCollider() {
+	if (!coll) return;
+
+	Matrix4x4f modelMatrix = computeModelMatrix();
+	coll->update(modelMatrix);
 }

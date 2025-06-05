@@ -19,17 +19,22 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="libprgr\Camera.cpp" />
+    <ClCompile Include="libprgr\Collider.cpp" />
     <ClCompile Include="libprgr\EventManager.cpp" />
     <ClCompile Include="libprgr\GLProgram.cpp" />
     <ClCompile Include="libprgr\Light.cpp" />
     <ClCompile Include="libprgr\Object3D.cpp" />
     <ClCompile Include="libprgr\Render.cpp" />
     <ClCompile Include="libprgr\Material.cpp" />
+    <ClCompile Include="libprgr\Sphere.cpp" />
     <ClCompile Include="MainPRGR_2024.cpp" />
+    <ClCompile Include="Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libprgr\Camera.h" />
+    <ClInclude Include="libprgr\Collider.h" />
     <ClInclude Include="libprgr\common.h" />
     <ClInclude Include="libprgr\EventManager.h" />
     <ClInclude Include="libprgr\GLProgram.h" />
@@ -37,6 +42,7 @@
     <ClInclude Include="libprgr\Object3D.h" />
     <ClInclude Include="libprgr\Render.h" />
     <ClInclude Include="libprgr\Material.h" />
+    <ClInclude Include="libprgr\Sphere.h" />
     <ClInclude Include="libprgr\vectorMath.h" />
     <ClInclude Include="libprgr\vertex.h" />
   </ItemGroup>
