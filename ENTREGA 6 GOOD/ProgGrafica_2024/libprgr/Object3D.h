@@ -4,40 +4,40 @@
 #include "vertex.h"
 #include "GLProgram.h"
 #include "Material.h"
+#include "libprgr/Collider.h"
+#include "libprgr/Sphere.h"
+
+using namespace libPRGR;
 
 class Object {
 public:
-	inline static int idCounter = 0;
-	int id;
+    inline static int idCounter = 0;
+    int id;
 
-	Material* mat;
+    Material* mat;
+    Vector4f pos = { 0,0,0,1 };
+    Vector4f rot = { 0,0,0,0 };
+    Vector4f size = { 1,1,1,1 };
 
-	Vector4f pos = { 0,0,0,1 };
-	Vector4f rot = { 0,0,0,0 };
-	Vector4f size = { 1,1,1,1 };
-	vector<vertex_t> vertexList;
-	vector<unsigned int> indexVertexList;
-	GLProgram* program = nullptr;
+    std::vector<vertex_t> vertexList;
+    std::vector<unsigned int> indexVertexList;
+    GLProgram* program = nullptr;
 
-	Object();
+    // NUEVO: Colisionador
+    Collider* coll = nullptr;
 
-	Object(string file);
+    Object();
+    Object(std::string file);
 
-	virtual void update(float timeStep);
+    virtual void update(float timeStep);
+    Matrix4x4f computeModelMatrix();
+    void updateCollider();
 
-	Matrix4x4f computeModelMatrix();
-
-	void loadFromFile(string file);
-
-	void leerVertices(std::ifstream& f);
-
-	void leerNormales(std::ifstream& f);
-
-	void leerTexturas(std::ifstream& f);
-
-	void leerColores(std::ifstream& f);
-
-	void leerCaras(std::ifstream& f);
-
-	void leerProgramas(std::ifstream& f);
+    void loadFromFile(std::string file);
+    void leerVertices(std::ifstream& f);
+    void leerNormales(std::ifstream& f);
+    void leerTexturas(std::ifstream& f);
+    void leerColores(std::ifstream& f);
+    void leerCaras(std::ifstream& f);
+    void leerProgramas(std::ifstream& f);
 };
