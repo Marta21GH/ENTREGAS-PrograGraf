@@ -46,10 +46,10 @@
       <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="libprgr\Collider.cpp">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de origen</Filter>
     </ClCompile>
     <ClCompile Include="libprgr\Sphere.cpp">
-      <Filter>Archivos de encabezado</Filter>
+      <Filter>Archivos de origen</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
