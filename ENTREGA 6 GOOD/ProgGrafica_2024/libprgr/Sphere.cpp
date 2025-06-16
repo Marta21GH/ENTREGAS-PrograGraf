@@ -1,11 +1,12 @@
 #include "Sphere.h"
-#include <cmath>  // Para sqrt
+#include <cmath>
+#include <algorithm>
 
 using namespace libPRGR;
 
 void Sphere::addParticle(particle part) {
     partList.push_back(part);
-    computeBoundingSphere();  // Recalcula centro y radio al añadir nueva partícula
+    computeBoundingSphere();
 }
 
 void Sphere::computeBoundingSphere() {
@@ -14,7 +15,6 @@ void Sphere::computeBoundingSphere() {
     Vector4f minTotal = partList[0].min;
     Vector4f maxTotal = partList[0].max;
 
-    // Calcular los extremos del volumen
     for (auto& p : partList) {
         minTotal.x = std::min(minTotal.x, p.min.x);
         minTotal.y = std::min(minTotal.y, p.min.y);
@@ -25,7 +25,6 @@ void Sphere::computeBoundingSphere() {
         maxTotal.z = std::max(maxTotal.z, p.max.z);
     }
 
-    // Centro = punto medio entre extremos
     center = {
         (minTotal.x + maxTotal.x) / 2.0f,
         (minTotal.y + maxTotal.y) / 2.0f,
@@ -33,7 +32,6 @@ void Sphere::computeBoundingSphere() {
         1.0f
     };
 
-    // Radio = distancia desde el centro al punto más alejado (max)
     float maxDist = 0.0f;
     for (auto& p : partList) {
         Vector4f point = {
@@ -53,7 +51,6 @@ void Sphere::computeBoundingSphere() {
 void Sphere::update(Matrix4x4f mat) {
     center = mat * center;
 
-    // Estimar escalado desde la matriz (asumimos uniforme en x)
     float scaleX = std::sqrt(mat.matrix[0][0] * mat.matrix[0][0] +
         mat.matrix[1][0] * mat.matrix[1][0] +
         mat.matrix[2][0] * mat.matrix[2][0]);

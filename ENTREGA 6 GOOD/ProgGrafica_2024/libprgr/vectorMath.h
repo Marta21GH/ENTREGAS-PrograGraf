@@ -164,7 +164,6 @@ namespace libPRGR {
 
 	inline float distance(Vector4f v1, Vector4f v2) {
 		Vector4f direction = v1 - v2;
-		float dist = sqrt((direction.x * direction.x) + (direction.y * direction.y) + (direction.z * direction.z));
-		return dist;
-	}
+		return sqrt(direction.x * direction.x + direction.y * direction.y + direction.z * direction.z);
+	}	
 }

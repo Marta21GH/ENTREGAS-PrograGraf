@@ -19,7 +19,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Collider.cpp" />
     <ClCompile Include="libprgr\Camera.cpp" />
     <ClCompile Include="libprgr\Collider.cpp" />
     <ClCompile Include="libprgr\EventManager.cpp" />
@@ -30,7 +29,6 @@
     <ClCompile Include="libprgr\Material.cpp" />
     <ClCompile Include="libprgr\Sphere.cpp" />
     <ClCompile Include="MainPRGR_2024.cpp" />
-    <ClCompile Include="Sphere.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="libprgr\Camera.h" />
