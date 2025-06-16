@@ -1,6 +1,7 @@
 #include "Object3D.h"
 #include "EventManager.h"
 #include "Sphere.h"
+#include "vectorMath.h"
 
 using namespace libPRGR;
 
@@ -24,9 +25,9 @@ void Object::loadFromFile(string file)
 		leerVertices(f);
 		// leerColores
 		leerColores(f);
-		//leerNormales
+		// leerNormales
 		leerNormales(f);
-		//leerTexturas
+		// leerTexturas
 		leerTexturas(f);
 		// leerCaras
 		leerCaras(f);
@@ -48,7 +49,11 @@ void Object::loadFromFile(string file)
 	}
 
 	coll = sphereColl;
+
+	//CALCULAR CENTRO Y RADIO DE LA ESFERA
+	this->computeBoundingSphere();
 }
+
 
 void Object::leerVertices(std::ifstream& f)
 {
@@ -224,4 +229,38 @@ void Object::updateCollider() {
 
 	Matrix4x4f modelMatrix = computeModelMatrix();
 	coll->update(modelMatrix);
+}
+
+void Object::computeBoundingSphere()
+{
+	if (vertexList.empty()) return;
+
+	// Calcular centro como promedio de posiciones
+	Vector4f sum = { 0, 0, 0, 0 };
+	for (auto& v : vertexList) {
+		sum = sum + v.vPos;
+	}
+
+	float invN = 1.0f / vertexList.size();
+	this->center = { sum.x * invN, sum.y * invN, sum.z * invN, 1.0f };
+
+	// Calcular radio como máxima distancia desde el centro
+	float maxDist = 0.0f;
+	for (auto& v : vertexList) {
+		Vector4f diff = v.vPos - this->center;
+		float dist = std::sqrt(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
+		if (dist > maxDist) maxDist = dist;
+	}
+	this->radius = maxDist;
+
+	// Añadir la esfera de colisión principal
+	Collider::particle main;
+	main.min = this->center - Vector4f{ radius, radius, radius, 0 };
+	main.max = this->center + Vector4f{ radius, radius, radius, 0 };
+	if (coll) coll->addParticle(main);
+
+	// Debug
+	std::cout << "[DEBUG] Esfera englobante creada. Centro: ("
+		<< center.x << ", " << center.y << ", " << center.z
+		<< "), Radio: " << radius << std::endl;
 }

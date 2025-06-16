@@ -4,9 +4,28 @@
 
 using namespace libPRGR;
 
-void Sphere::addParticle(particle part) {
-    partList.push_back(part);
-    computeBoundingSphere();
+float length(const libPRGR::Vector4f& v) {
+    return std::sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
+}
+
+void Sphere::addParticle(particle part)
+{
+    this->partList.push_back(part);
+
+    // Calcular el centro de la partícula como media de min y max
+    libPRGR::Vector4f center = {
+        (part.min.x + part.max.x) * 0.5f,
+        (part.min.y + part.max.y) * 0.5f,
+        (part.min.z + part.max.z) * 0.5f,
+        1.0f
+    };
+
+    // Calcular el radio como la mitad de la distancia entre min y max
+    float radio = length(part.max - center);
+
+    // Asignar como radio de la esfera si es mayor que el actual
+    if (radio > this->radius)
+        this->radius = radio;
 }
 
 void Sphere::computeBoundingSphere() {
@@ -65,5 +84,9 @@ bool Sphere::test(Collider* c2) {
     if (!other) return false;
 
     float dist = distance(this->center, other->center);
-    return dist <= (this->radius + other->radius);
+    float sumRadius = this->radius + other->radius;
+
+    std::cout << "[TEST] dist: " << dist << " | r1: " << this->radius << " | r2: " << other->radius << std::endl;
+
+    return dist <= sumRadius;
 }

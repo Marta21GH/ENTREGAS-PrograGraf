@@ -121,26 +121,33 @@ void Render::mainLoop()
 	float newTime = 0;
 
 	while (!glfwWindowShouldClose(this->window)) {
-		//actualizar tiempo
+		// actualizar tiempo
 		newTime = glfwGetTime();
 		timeStep = newTime - oldTime;
 		oldTime = newTime;
 
-		//Check eventos
+		// Check eventos
 		glfwPollEvents();
+
+		// Actualizar objetos y colisionadores
 		for (auto obj : this->objectList) {
 			obj->update(timeStep);
-			this->cam->update();
-			this->light->move(timeStep);
+			obj->updateCollider();
 		}
-		//Dibujar
-			//Limpiar buffer
+
+		// Actualizar cámara y luz
+		this->cam->update();
+		this->light->move(timeStep);
+
+		// Limpiar pantalla
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		//Mandar figura a dibujar
+
+		// Dibujar todos los objetos
 		for (auto obj : this->objectList) {
 			this->drawGL(obj);
 		}
-		//Cambiar buffers
+
+		// Intercambiar buffers
 		glfwSwapBuffers(window);
 	}
 }

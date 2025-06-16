@@ -1,5 +1,8 @@
 #pragma once
 #include "vectorMath.h"
+#include "Collider.h"
+#include "Sphere.h"
+
 using namespace libPRGR;
 
 class Camera {
@@ -14,7 +17,9 @@ public:
 	float zNear = 0.01f; //Plano cercano
 	float zFar = 100.0f; //Plano lejano
 
-	Camera(Vector4f pos, Vector4f up, Vector4f lookAt) : pos(pos), up(up), lookAt(lookAt) {}
+	Collider* coll = nullptr;
+
+	Camera(Vector4f pos, Vector4f up, Vector4f lookAt);
 
 	Matrix4x4f computeViewMatrix();
 	Matrix4x4f computeProjectionMatrix();

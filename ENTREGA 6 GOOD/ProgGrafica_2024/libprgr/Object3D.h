@@ -26,6 +26,10 @@ public:
     // NUEVO: Colisionador
     Collider* coll = nullptr;
 
+    // NUEVO: Atributos para colisión tipo esfera
+    Vector4f center;
+    float radius = 0.0f;
+
     Object();
     Object(std::string file);
 
@@ -40,4 +44,7 @@ public:
     void leerColores(std::ifstream& f);
     void leerCaras(std::ifstream& f);
     void leerProgramas(std::ifstream& f);
+
+    // NUEVO: Calcular esfera englobante
+    void computeBoundingSphere();
 };

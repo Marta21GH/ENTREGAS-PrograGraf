@@ -12,7 +12,7 @@ public:
 	}bufferObject;
 
 	map<int, bufferObject> bufferObjectList;
-	list<Object*> objectList;
+	inline static list<Object*> objectList;
 	GLFWwindow* window = nullptr;
 
 	Camera* cam = nullptr;
