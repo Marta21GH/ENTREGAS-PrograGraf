@@ -86,7 +86,10 @@ bool Sphere::test(Collider* c2) {
     float dist = distance(this->center, other->center);
     float sumRadius = this->radius + other->radius;
 
-    std::cout << "[TEST] dist: " << dist << " | r1: " << this->radius << " | r2: " << other->radius << std::endl;
+    //std::cout << "[TEST] dist: " << dist << " | r1: " << this->radius << " | r2: " << other->radius << std::endl;
+    std::cout << "[TEST] dist: " << dist << " | center1: " << this->center.x << " " << this->center.y << " " << this->center.z << " " 
+        << " | center2: " << other->center.x << " " << other->center.y << " " << other->center.z << " " << std::endl;
+    std::cout << "[TEST] dist: " << dist << " | sumRadius: " << sumRadius << " | COLLIDING: " << (dist <= sumRadius) << std::endl;
 
     return dist <= sumRadius;
 }

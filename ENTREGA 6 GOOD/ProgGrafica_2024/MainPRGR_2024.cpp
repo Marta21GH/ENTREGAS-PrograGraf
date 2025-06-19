@@ -13,7 +13,6 @@ int main(int argc, char** argv)
     Render* r = new Render();
         Camera* cam1 = new Camera({ 0,0,-3,1 }, { 0,1,0,0 }, { 0,0,0,1 });
     Light* light1 = new OrbitalLight({ 0,0,-3,1 }, { 1,1,1,1 }, 0.5, 1.0, 2.0, LightType::POINT, { 0, 0, 0, 1 }, 1.0f);
-    //Light* light2 = new OrbitalLight({ 1,0,-2,1 }, { 0.9,0.8,1,1 }, 0.5, 1.0, 2.0, LightType::POINT, { 0, 0, 0, 1 }, 1.0f);
 
     GLFWwindow* window = r->initGLFW();
 
