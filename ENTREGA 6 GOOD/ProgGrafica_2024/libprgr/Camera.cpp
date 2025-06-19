@@ -3,7 +3,6 @@
 #include "Sphere.h"
 #include "Object3D.h"
 #include "Render.h"
-#include <iostream>
 
 using namespace libPRGR;
 
@@ -51,10 +50,11 @@ Matrix4x4f Camera::computeProjectionMatrix()
 Camera::Camera(Vector4f pos, Vector4f up, Vector4f lookAt) : pos(pos), up(up), lookAt(lookAt) {
     Sphere* sphereColl = new Sphere();
     Collider::particle p;
-    p.min = pos - Vector4f{ 0.5f, 0.5f, 0.5f, 0 };
-    p.max = pos + Vector4f{ 0.5f, 0.5f, 0.5f, 0 };
+    p.min = pos - Vector4f{ 0.125f, 0.125f, 0.125f, 0 };
+    p.max = pos + Vector4f{ 0.125f, 0.125f, 0.125f, 0 };
     sphereColl->addParticle(p);
     coll = sphereColl;
+    originalCenter = (p.min + p.max) * 0.5f;
 }
 
 void Camera::update()
@@ -68,24 +68,25 @@ void Camera::update()
     if (EventManager::keyState[GLFW_KEY_A] || EventManager::keyState[GLFW_KEY_LEFT]) { pos.x += moveSpeed; lookAt.x += moveSpeed; }
     if (EventManager::keyState[GLFW_KEY_D] || EventManager::keyState[GLFW_KEY_RIGHT]) { pos.x -= moveSpeed; lookAt.x -= moveSpeed; }
 
-    // Actualizar colisionador de la cámara
     Matrix4x4f modelMatrix = make_translate(pos.x, pos.y, pos.z);
-    coll->update(modelMatrix);
+    Sphere* sphere = dynamic_cast<Sphere*>(coll);
+    if (sphere) {
+        sphere->center = modelMatrix * originalCenter;
+        sphere->radius = 0.125f;
+    }
 
-    // Comprobar colisión contra TODOS los objetos
-    for (Object* obj : Render::objectList) {
-        if (!obj || !obj->coll) continue;
-
-        std::cout << "[DEBUG] Probando colisión contra objeto ID: " << obj->id << std::endl;
-
-        if (coll && coll->test(obj->coll)) {
-            std::cout << "[COLISIÓN DETECTADA] Cámara chocó con objeto ID: " << obj->id << std::endl;
-
+    if (!Render::objectList.empty()) {
+        Object* target = Render::objectList.front();
+        std::cout << "[DEBUG] Probando colisión contra objeto ID: " << target->id << std::endl;
+        if (coll && target && target->coll && coll->test(target->coll)) {
             pos = prevPos;
             lookAt = prevLookAt;
+
             modelMatrix = make_translate(pos.x, pos.y, pos.z);
-            coll->update(modelMatrix);
-            break;
+            if (sphere) {
+                sphere->center = modelMatrix * originalCenter;
+                sphere->radius = 0.125f;
+            }
         }
     }
 }

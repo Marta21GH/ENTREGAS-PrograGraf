@@ -18,6 +18,7 @@ public:
 	float zFar = 100.0f; //Plano lejano
 
 	Collider* coll = nullptr;
+	Vector4f originalCenter;
 
 	Camera(Vector4f pos, Vector4f up, Vector4f lookAt);
 
