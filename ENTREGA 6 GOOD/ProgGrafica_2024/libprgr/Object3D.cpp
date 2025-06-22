@@ -204,13 +204,13 @@ void Object::leerProgramas(std::ifstream& f)
 }
 
 void Object::update(float timeStep) {
-	if (EventManager::keyState[GLFW_KEY_LEFT]) {
+	/*if (EventManager::keyState[GLFW_KEY_LEFT]) {
 		this->pos.x -= 0.01f;
 	}
 
 	if (EventManager::keyState[GLFW_KEY_RIGHT]) {
 		this->pos.x += 0.01f;
-	}
+	}*/
 
 	float rotationSpeed = 1.0f;
 	//this->rot.y += rotationSpeed*timeStep;
