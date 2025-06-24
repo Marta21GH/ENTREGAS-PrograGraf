@@ -251,7 +251,9 @@ void Object::computeBoundingSphere()
 		float dist = std::sqrt(diff.x * diff.x + diff.y * diff.y + diff.z * diff.z);
 		if (dist > maxDist) maxDist = dist;
 	}
-	this->radius = maxDist;
+
+	// Establecer un radio mínimo para asegurar colisión visible
+	this->radius = std::max(maxDist, 0.3f);  // Puedes probar con 0.4f si aún es poco
 
 	// Añadir la esfera de colisión principal
 	Collider::particle main;

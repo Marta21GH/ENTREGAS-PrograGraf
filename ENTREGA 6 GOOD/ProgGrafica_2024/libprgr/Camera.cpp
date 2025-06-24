@@ -50,10 +50,15 @@ Matrix4x4f Camera::computeProjectionMatrix()
 Camera::Camera(Vector4f pos, Vector4f up, Vector4f lookAt) : pos(pos), up(up), lookAt(lookAt) {
     Sphere* sphereColl = new Sphere();
     Collider::particle p;
-    p.min = pos - Vector4f{ 0.125f, 0.125f, 0.125f, 0 };
-    p.max = pos + Vector4f{ 0.125f, 0.125f, 0.125f, 0 };
+
+    float half = 0.125f;
+    p.min = Vector4f{ -half, -half, -half, 1.0f };
+    p.max = Vector4f{ half,  half,  half, 1.0f };
     sphereColl->addParticle(p);
+
     coll = sphereColl;
+
+    // Este será el centro de referencia que luego se trasladará con make_translate
     originalCenter = (p.min + p.max) * 0.5f;
 }
 
@@ -68,6 +73,7 @@ void Camera::update()
     if (EventManager::keyState[GLFW_KEY_A] || EventManager::keyState[GLFW_KEY_LEFT]) { pos.x += moveSpeed; lookAt.x += moveSpeed; }
     if (EventManager::keyState[GLFW_KEY_D] || EventManager::keyState[GLFW_KEY_RIGHT]) { pos.x -= moveSpeed; lookAt.x -= moveSpeed; }
 
+    // Actualizar colisionador tras movimiento
     Matrix4x4f modelMatrix = make_translate(pos.x, pos.y, pos.z);
     Sphere* sphere = dynamic_cast<Sphere*>(coll);
     if (sphere) {
@@ -75,14 +81,20 @@ void Camera::update()
         sphere->radius = 0.125f;
     }
 
+    // Detección de colisión
     if (!Render::objectList.empty()) {
-        Object* target = Render::objectList.front();
+        Object* target = Render::objectList.front();  // Obtenemos el objeto (por ejemplo, cubo)
         std::cout << "[DEBUG] Probando colisión contra objeto ID: " << target->id << std::endl;
+
+        // Si hay colisionador tanto en la cámara como en el objeto
         if (coll && target && target->coll && coll->test(target->coll)) {
+            // Revertir posición y orientación
             pos = prevPos;
             lookAt = prevLookAt;
 
-            modelMatrix = make_translate(pos.x, pos.y, pos.z);
+            // Recalcular centro del colisionador de la cámara
+            Matrix4x4f modelMatrix = make_translate(pos.x, pos.y, pos.z);
+            Sphere* sphere = dynamic_cast<Sphere*>(coll);
             if (sphere) {
                 sphere->center = modelMatrix * originalCenter;
                 sphere->radius = 0.125f;
